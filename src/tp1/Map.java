@@ -63,22 +63,22 @@ public class Map {
         System.out.println("Description alentour:");
         int i = 0;
         while(i!=Entrances.length()){
-            if(Entrances.charAt(i) == 'N'){
+            if(Entrances.charAt(i) == 'N' && isRoomAvailable(x-1,y)){
                 System.out.print("La porte du Nord mene a :");
                 System.out.println(rooms.get(x-1*width+y).getName());
                 continue;
             }
-            if(Entrances.charAt(i) == 'S'){
+            if(Entrances.charAt(i) == 'S' && isRoomAvailable(x+1,y)){
                 System.out.print("La porte du Sud mene a :");
                 System.out.println(rooms.get(x+1*width+y).getName());
                 continue;
             }
-            if(Entrances.charAt(i) == 'E'){
+            if(Entrances.charAt(i) == 'E' && isRoomAvailable(x,y+1)){
                 System.out.print("La porte de l'Est mene a :");
                 System.out.println(rooms.get(x*width+y+1).getName());
                 continue;
             }
-            if(Entrances.charAt(i) == 'W'){
+            if(Entrances.charAt(i) == 'W' && isRoomAvailable(x,y-1)){
                 System.out.print("La porte de l'Ouest mene a :");
                 System.out.println(rooms.get(x-1*width+y-1).getName());
             }
@@ -90,7 +90,7 @@ public class Map {
         int nextRoomIs;
         switch(nextRoom){
             case('N'):
-                if(actualRoom>width){
+                if(isRoomAvailable(actualRoom%width,actualRoom/width-1)){
                     nextRoomIs = actualRoom - width;
                 }else{
                     System.err.println("Erreur, position incorrecte");
@@ -98,7 +98,7 @@ public class Map {
                 }
             break;
             case('S'):
-                if(actualRoom<height*width - width){
+                if(isRoomAvailable(actualRoom%width,actualRoom/width+1)){
                     nextRoomIs = actualRoom + width;
                 }else{
                     System.err.println("Erreur, position incorrecte");
@@ -106,7 +106,7 @@ public class Map {
                 }
             break;
             case('E'):
-                if(actualRoom%width<width){
+                if(isRoomAvailable(actualRoom%width+1,actualRoom/width)){
                     nextRoomIs = actualRoom + 1;
                 }else{
                     System.err.println("Erreur, position incorrecte");
@@ -114,7 +114,7 @@ public class Map {
                 }
             break;
             case('W'):
-                if(actualRoom%width>0){
+                if(isRoomAvailable(actualRoom%width+1,actualRoom/width)){
                     nextRoomIs = actualRoom - 1;
                 }else{
                     System.err.println("Erreur, position incorrecte");
@@ -127,5 +127,11 @@ public class Map {
             break;
         }
         hero.setRoom(rooms.get(nextRoomIs));
+    }
+    private boolean isRoomAvailable(int x,int y){
+        if(x<0 || y<0 || x>width || y>height){
+            return false;
+        }
+        return true;
     }
 }
