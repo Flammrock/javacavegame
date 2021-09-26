@@ -24,15 +24,18 @@ public class TP1 {
         Parser p = new Parser(new Stream(System.in));
         
         
-        while (true) {
+        /*while (true) {
             Token t = p.getNextToken();
             if (t!=null) {
                 System.out.println(t);
             }
-        }
+        }*/
         
         // test
         //blocked?
+        Room salle = new Room(0,0,"salle de coffre","NSE",null);
+        Character Hero = new Character(salle,"Hero",null);
+        Hero.moveWhere();
     }
     
 }

@@ -13,12 +13,14 @@ import java.util.ArrayList;
  */
 public class Map {
     
+    protected Character hero;
     protected ArrayList<Room> rooms;
     protected int width;
     protected int height;
 
-    public Map(ArrayList<Room> rooms, int width, int height) {
+    public Map(ArrayList<Room> rooms, Character hero, int width, int height) {
         this.rooms = rooms;
+        this.hero = hero;
         this.width = width;
         this.height = height;
     }
@@ -29,6 +31,14 @@ public class Map {
 
     public void setRooms(ArrayList<Room> rooms) {
         this.rooms = rooms;
+    }
+
+    public Character getHero() {
+        return hero;
+    }
+
+    public void setHero(Character hero) {
+        this.hero = hero;
     }
 
     public int getWidth() {
@@ -73,5 +83,49 @@ public class Map {
                 System.out.println(rooms.get(x-1*width+y-1).getName());
             }
         }
+    }
+    public void moveCharacter(){
+        int actualRoom = hero.getRoom().getX()+hero.getRoom().getY()+width;
+        char nextRoom = hero.moveWhere();
+        int nextRoomIs;
+        switch(nextRoom){
+            case('N'):
+                if(actualRoom>width){
+                    nextRoomIs = actualRoom - width;
+                }else{
+                    System.err.println("Erreur, position incorrecte");
+                    nextRoomIs = actualRoom;
+                }
+            break;
+            case('S'):
+                if(actualRoom<height*width - width){
+                    nextRoomIs = actualRoom + width;
+                }else{
+                    System.err.println("Erreur, position incorrecte");
+                    nextRoomIs = actualRoom;
+                }
+            break;
+            case('E'):
+                if(actualRoom%width<width){
+                    nextRoomIs = actualRoom + 1;
+                }else{
+                    System.err.println("Erreur, position incorrecte");
+                    nextRoomIs = actualRoom;
+                }
+            break;
+            case('W'):
+                if(actualRoom%width>0){
+                    nextRoomIs = actualRoom - 1;
+                }else{
+                    System.err.println("Erreur, position incorrecte");
+                    nextRoomIs = actualRoom;
+                }
+            break;
+            default:
+                System.err.println("Mauvaise entrer position salle");
+                nextRoomIs = actualRoom;
+            break;
+        }
+        hero.setRoom(rooms.get(nextRoomIs));
     }
 }
