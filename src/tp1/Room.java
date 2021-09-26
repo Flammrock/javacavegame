@@ -72,6 +72,9 @@ public class Room {
         this.entrances = entrances;
     }
     
-    
+    @Override
+    public String toString(){
+        return null;
+    }
     
 }
