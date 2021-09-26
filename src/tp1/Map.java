@@ -13,6 +13,7 @@ import java.util.ArrayList;
  */
 public class Map {
     
+    protected Character hero;
     protected ArrayList<Room> rooms;
     protected int width;
     protected int height;
@@ -73,5 +74,29 @@ public class Map {
                 System.out.println(rooms.get(x-1*width+y-1).getName());
             }
         }
+    }
+    public void moveCharacter(){
+        int actualRoom = hero.getRoom().getX()+hero.getRoom().getY()+width;
+        char nextRoom = hero.moveWhere();
+        int nextRoomIs;
+        switch(nextRoom){
+            case('N'):
+                nextRoomIs = actualRoom - width;
+            break;
+            case('S'):
+                nextRoomIs = actualRoom + width;
+            break;
+            case('E'):
+                nextRoomIs = actualRoom + 1;
+            break;
+            case('W'):
+                nextRoomIs = actualRoom - 1;
+            break;
+            default:
+                System.err.println("Mauvaise entrer position salle");
+                nextRoomIs = actualRoom;
+            break;
+        }
+        hero.setRoom(rooms.get(nextRoomIs));
     }
 }
