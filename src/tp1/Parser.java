@@ -18,9 +18,11 @@ import java.util.Scanner;
 public class Parser {
     
     protected Stream stream;
+    protected String current;
 
     public Parser(Stream stream) {
         this.stream = stream;
+        this.current = "";
     }
     
     public boolean hasNextToken() {
@@ -42,6 +44,10 @@ public class Parser {
         }
     }
     
+    public Token peekToken() {
+        return new Token(this.current);
+    }
+    
     public Token getNextToken() {
         
         // if no next token, abort
@@ -53,26 +59,38 @@ public class Parser {
         // comment
         if (c=='#') {
             // read the line and return the token
-            return new Token(this.getUntilMeetChar('\n'));
+            this.current = this.getUntilMeetChar('\n');
+            return new Token(this.current);
         }
         
         // !
         if (c=='!') {
             this.stream.next();
+            this.current = "!";
             return new Token("!");
         }
             
         // else
-        return new Token(this.getUntilMeetChar(','));
+        this.current = this.getUntilMeetChar(',');
+        return new Token(this.current);
         
     }
     
     public List<Token> getTokenList() {
         List<Token> tokens = new ArrayList<>();
-        while (!this.hasNextToken()) {
+        while (this.hasNextToken()) {
             tokens.add(this.getNextToken());
         }
         return tokens;
+    }
+    
+    public void skipComments() {
+        if (!this.hasNextToken()) return;
+        while (true) {
+            char c = this.stream.peek();
+            if (c=='#') this.getUntilMeetChar('\n');
+            return;
+        }
     }
     
 }
