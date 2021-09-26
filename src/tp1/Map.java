@@ -59,7 +59,7 @@ public class Map {
                     String roomEntrances = p.getNextToken().getData();
                     String roomStartPosition = p.getNextToken().getData();
                     System.out.println(x+","+y+" : "+roomName+" - "+roomEntrances+" - "+roomStartPosition);
-                    buildedrooms.add(new Room(x, y, roomName, roomEntrances, null));
+                    buildedrooms.add(new Room(x, y, roomName, roomEntrances));
                     return buildedrooms;
                 }
 
@@ -73,7 +73,7 @@ public class Map {
                         String roomEntrances = p.getNextToken().getData();
                         String roomStartPosition = p.getNextToken().getData();
                         System.out.println((this.width-x)+","+y+" : "+roomName+" - "+roomEntrances+" - "+roomStartPosition);
-                        buildedrooms.add(new Room(this.width-x, y, roomName, roomEntrances, null));
+                        buildedrooms.add(new Room(this.width-x, y, roomName, roomEntrances));
                         x--;
                     }
                     return buildedrooms;

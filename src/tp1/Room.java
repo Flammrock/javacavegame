@@ -19,6 +19,14 @@ public class Room {
     protected String entrances;
     protected ArrayList<Talisman> talismans;
     protected ArrayList<Talisman> talismansLock;
+    
+    public Room(int x, int y, String name, String entrances) {
+        this.x = x;
+        this.y = y;
+        this.name = name;
+        this.entrances = entrances;
+        this.talismans = new ArrayList<>();
+    }
 
     public Room(int x, int y, String name, String entrances, ArrayList<Talisman> talismans) {
         this.x = x;
