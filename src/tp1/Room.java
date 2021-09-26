@@ -106,5 +106,15 @@ public class Room {
         }
         return phrasesDescriptif;
     }
-    
+    public String getTalismansToString(){
+        String description = "";
+        int i=0;
+        if(talismans != null){
+            for(Talisman t:talismans){
+                description += "(" +i+ ")"+t.getName()+"\n";
+                i++;
+            }
+        }
+        return description;
+    }
 }
