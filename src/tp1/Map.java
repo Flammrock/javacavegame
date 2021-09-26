@@ -85,7 +85,7 @@ public class Map {
         }
     }
     public void moveCharacter(){
-        int actualRoom = hero.getRoom().getX()+hero.getRoom().getY()+width;
+        int actualRoom = hero.getRoom().getX()+hero.getRoom().getY()*width;
         char nextRoom = hero.moveWhere();
         int nextRoomIs;
         switch(nextRoom){
@@ -129,7 +129,7 @@ public class Map {
         hero.setRoom(rooms.get(nextRoomIs));
     }
     private boolean isRoomAvailable(int x,int y){
-        if(x<0 || y<0 || x>width || y>height){
+        if(x<0 || y<0 || x>width-1 || y>height-1){
             return false;
         }
         return true;
