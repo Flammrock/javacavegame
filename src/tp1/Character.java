@@ -47,7 +47,9 @@ public class Character {
     public void setTalisman(ArrayList<Talisman> talisman) {
         this.talisman = talisman;
     }
-    
+    public void addTalisman(ArrayList<Talisman> talisman){
+        this.talisman.addAll(talisman);
+    }
     public char moveWhere(){
         Scanner sc = new Scanner(System.in);
         while(true){
