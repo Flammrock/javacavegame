@@ -165,26 +165,32 @@ public class Map {
         System.out.println("Description alentour:");
         int i = 0;
         while(i!=Entrances.length()){
+            
             if(Entrances.charAt(i) == 'N' && isRoomAvailable(x-1,y)){
                 System.out.print("La porte du Nord mene a :");
                 System.out.println(rooms.get(x-1*width+y).getName());
+                i++;
                 continue;
             }
             if(Entrances.charAt(i) == 'S' && isRoomAvailable(x+1,y)){
                 System.out.print("La porte du Sud mene a :");
                 System.out.println(rooms.get(x+1*width+y).getName());
+                i++;
                 continue;
             }
             if(Entrances.charAt(i) == 'E' && isRoomAvailable(x,y+1)){
                 System.out.print("La porte de l'Est mene a :");
                 System.out.println(rooms.get(x*width+y+1).getName());
+                i++;
                 continue;
             }
             if(Entrances.charAt(i) == 'W' && isRoomAvailable(x,y-1)){
                 System.out.print("La porte de l'Ouest mene a :");
                 System.out.println(rooms.get(x-1*width+y-1).getName());
+                i++;
             }
         }
+        System.out.println("\n");
     }
     public Room moveCharacter(){
         int actualRoom = hero.getRoom().getX()+hero.getRoom().getY()*width;
@@ -250,6 +256,7 @@ public class Map {
     public void enterNewRoom(Room r){
         hero.setRoom(r);
         System.out.println(r.toString());
+        descriptionAlentoure(r.getX(),r.getY());
         hero.inventaire();
         
     }
