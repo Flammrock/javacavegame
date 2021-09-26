@@ -48,9 +48,10 @@ public class Character {
         this.talisman = talisman;
     }
     
-    public char move(){
+    public char moveWhere(){
         Scanner sc = new Scanner(System.in);
         while(true){
+            System.out.println(room.toString());
             System.out.println("Quel est votre prochaine destination? (N/S/E/W) ");
             String nextRoom = sc.next();
             char nextPorte = nextRoom.charAt(0);
@@ -59,4 +60,5 @@ public class Character {
             }
         }
     }
+    
 }
