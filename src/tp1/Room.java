@@ -17,14 +17,14 @@ public class Room {
     protected int y;
     protected String name;
     protected String entrances;
-    protected ArrayList<Character> characters;
+    protected ArrayList<Talisman> talismans;
 
-    public Room(int x, int y, String name, String entrances, ArrayList<Character> characters) {
+    public Room(int x, int y, String name, String entrances, ArrayList<Talisman> talismans) {
         this.x = x;
         this.y = y;
         this.name = name;
         this.entrances = entrances;
-        this.characters = characters;
+        this.talismans = talismans;
     }
     
     public static Room buildFromFile(String filename) {
@@ -32,12 +32,12 @@ public class Room {
         return null;
     }
 
-    public ArrayList<Character> getCharacters() {
-        return characters;
+    public ArrayList<Talisman> getCharacters() {
+        return talismans;
     }
 
-    public void setCharacters(ArrayList<Character> characters) {
-        this.characters = characters;
+    public void setCharacters(ArrayList<Talisman> talismans) {
+        this.talismans = talismans;
     }
 
     public int getX() {
