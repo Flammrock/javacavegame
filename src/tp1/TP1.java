@@ -41,7 +41,15 @@ public class TP1 {
         ArrayList<Room> r = new ArrayList();
         r.add(salle);
         Map m =  new Map(r,Hero,1,1);
-        m.enterNewRoom(salle);
+        
+        try {
+            m.buildFromInputStream(TP1.class.getResourceAsStream("Rooms.dat"));
+            m.enterNewRoom(salle);
+        } catch (Exception e) {
+            System.out.println("fail build rooms");
+        }
+        
+        
         
     }
 }
