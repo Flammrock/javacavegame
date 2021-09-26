@@ -41,7 +41,7 @@ public class TP1 {
         ArrayList<Room> r = new ArrayList();
         r.add(salle);
         Map m =  new Map(r,Hero,1,1);
-        System.out.println(salle.toString());
-        m.moveCharacter();
+        m.enterNewRoom(salle);
+        
     }
 }
