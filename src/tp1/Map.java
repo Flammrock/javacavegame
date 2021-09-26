@@ -18,8 +18,9 @@ public class Map {
     protected int width;
     protected int height;
 
-    public Map(ArrayList<Room> rooms, int width, int height) {
+    public Map(ArrayList<Room> rooms, Character hero, int width, int height) {
         this.rooms = rooms;
+        this.hero = hero;
         this.width = width;
         this.height = height;
     }
@@ -30,6 +31,14 @@ public class Map {
 
     public void setRooms(ArrayList<Room> rooms) {
         this.rooms = rooms;
+    }
+
+    public Character getHero() {
+        return hero;
+    }
+
+    public void setHero(Character hero) {
+        this.hero = hero;
     }
 
     public int getWidth() {
