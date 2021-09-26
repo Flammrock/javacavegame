@@ -230,4 +230,22 @@ public class Map {
             }
         }
     }
+    
+    /*public void Choix(char c){
+        if(c == 'P'){
+            
+        }
+        if(c == 'J'){
+            
+        }
+        if(c == 'V'){
+            
+        }
+        if(c == 'U'){
+            
+        }
+        if(c == 'D'){
+            
+        }
+    }*/
 }
