@@ -18,6 +18,7 @@ public class Room {
     protected String name;
     protected String entrances;
     protected ArrayList<Talisman> talismans;
+    protected ArrayList<Talisman> talismansLock;
 
     public Room(int x, int y, String name, String entrances, ArrayList<Talisman> talismans) {
         this.x = x;
@@ -32,13 +33,23 @@ public class Room {
         return null;
     }
 
-    public ArrayList<Talisman> getCharacters() {
+    public ArrayList<Talisman> getTalismans() {
         return talismans;
     }
 
-    public void setCharacters(ArrayList<Talisman> talismans) {
+    public void setTalismans(ArrayList<Talisman> talismans) {
         this.talismans = talismans;
     }
+
+    public ArrayList<Talisman> getTalismansLock() {
+        return talismansLock;
+    }
+
+    public void setTalismansLock(ArrayList<Talisman> talismansLock) {
+        this.talismansLock = talismansLock;
+    }
+    
+    
 
     public int getX() {
         return x;
