@@ -90,16 +90,36 @@ public class Map {
         int nextRoomIs;
         switch(nextRoom){
             case('N'):
-                nextRoomIs = actualRoom - width;
+                if(actualRoom>width){
+                    nextRoomIs = actualRoom - width;
+                }else{
+                    System.err.println("Erreur, position incorrecte");
+                    nextRoomIs = actualRoom;
+                }
             break;
             case('S'):
-                nextRoomIs = actualRoom + width;
+                if(actualRoom<height*width - width){
+                    nextRoomIs = actualRoom + width;
+                }else{
+                    System.err.println("Erreur, position incorrecte");
+                    nextRoomIs = actualRoom;
+                }
             break;
             case('E'):
-                nextRoomIs = actualRoom + 1;
+                if(actualRoom%width<width){
+                    nextRoomIs = actualRoom + 1;
+                }else{
+                    System.err.println("Erreur, position incorrecte");
+                    nextRoomIs = actualRoom;
+                }
             break;
             case('W'):
-                nextRoomIs = actualRoom - 1;
+                if(actualRoom%width>0){
+                    nextRoomIs = actualRoom - 1;
+                }else{
+                    System.err.println("Erreur, position incorrecte");
+                    nextRoomIs = actualRoom;
+                }
             break;
             default:
                 System.err.println("Mauvaise entrer position salle");
