@@ -167,31 +167,36 @@ public class Map {
         while(i!=Entrances.length()){
             
             if(Entrances.charAt(i) == 'N' && isRoomAvailable(x-1,y)){
-                System.out.print("La porte du Nord mene a :");
+                System.out.print("La porte du (N)ord mene a :");
                 System.out.println(rooms.get(x-1*width+y).getName());
                 i++;
                 continue;
             }
             if(Entrances.charAt(i) == 'S' && isRoomAvailable(x+1,y)){
-                System.out.print("La porte du Sud mene a :");
+                System.out.print("La porte du (S)ud mene a :");
                 System.out.println(rooms.get(x+1*width+y).getName());
                 i++;
                 continue;
             }
             if(Entrances.charAt(i) == 'E' && isRoomAvailable(x,y+1)){
-                System.out.print("La porte de l'Est mene a :");
+                System.out.print("La porte de l'(E)st mene a :");
                 System.out.println(rooms.get(x*width+y+1).getName());
                 i++;
                 continue;
             }
             if(Entrances.charAt(i) == 'W' && isRoomAvailable(x,y-1)){
-                System.out.print("La porte de l'Ouest mene a :");
+                System.out.print("La porte de l'(O)uest mene a :");
                 System.out.println(rooms.get(x-1*width+y-1).getName());
                 i++;
             }
         }
         System.out.println("\n");
     }
+
+    /**
+     *
+     * @return retourn la salle choisie par l'utilisateur
+     */
     public Room moveCharacter(){
         int actualRoom = hero.getRoom().getX()+hero.getRoom().getY()*width;
         char nextRoom = '\0';
@@ -280,6 +285,10 @@ public class Map {
         }
     }
     
+    /**
+     *
+     * @return choix de l'utilisateur pour la suite de ses actions
+     */
     public char choiceChar(){
         while(true){
             System.out.println("Vous pouvez:");
@@ -305,21 +314,43 @@ public class Map {
         }
     }
     
-    /*public void Choix(char c){
+    /**
+     *  la fonction execute l'action en fonction de se qui est demander en entrer
+     * @param c le choix de l'utilisateur
+     */
+    public void choix(char c){
+        Scanner sc = new Scanner(System.in);
+        
         if(c == 'P'){
-            
+            System.out.println("Quelle talisement prenez vous?");
+            System.out.println(hero.getRoom().getTalismansToString());
+            int choise;
+            do{
+                choise = sc.nextInt();
+            }while(takeTalismans(choise));
         }
         if(c == 'J'){
-            
+            System.out.println("Quelle talisement jetez vous?");
+            System.out.println(hero.getTalismansToString());
+            int choise;
+            do{
+                choise = sc.nextInt();
+            }while(putTalismans(choise));
         }
         if(c == 'V'){
-            
+            hero.inventaire();
         }
         if(c == 'U'){
-            
+            //TODO
         }
         if(c == 'D'){
-            
+            System.out.println("Quelle porte prenez vous?");
+            descriptionAlentoure(hero.getRoom().getX(),hero.getRoom().getY());
+            enterNewRoom(moveCharacter());
         }
-    }*/
+    }
+    
+    public void quefaire(){
+        choix(choiceChar());
+    }
 }
