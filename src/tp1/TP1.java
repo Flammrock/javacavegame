@@ -18,7 +18,7 @@ public class TP1 {
         // TODO code application logic here
         
         // test
-        //coiucou
+        //blocked?
     }
     
 }
