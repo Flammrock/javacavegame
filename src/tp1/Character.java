@@ -53,6 +53,7 @@ public class Character {
         while(true){
             System.out.println("Quel est votre prochaine destination? (N/S/E/W) ");
             String nextRoom = sc.next();
+            nextRoom = nextRoom.toUpperCase();
             char nextPorte = nextRoom.charAt(0);
             if(nextPorte=='N' || nextPorte=='S' || nextPorte=='E' || nextPorte=='W'){
                 return nextPorte;
