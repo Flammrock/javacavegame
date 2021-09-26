@@ -23,6 +23,12 @@ public class Stream {
         this.scanner.useDelimiter("");
     }
     
+    public Stream(String str) {
+        this.data = "";
+        this.scanner = new Scanner(str);
+        this.scanner.useDelimiter("");
+    }
+    
     private void populate() {
         // if empty repopulate
         if (this.data.isEmpty()) this.data = this.scanner.next();
