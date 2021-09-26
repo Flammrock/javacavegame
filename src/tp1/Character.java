@@ -74,4 +74,16 @@ public class Character {
         }
         System.out.println(inv);
     }
+    
+    public String getTalismansToString(){
+        String description = "";
+        int i=0;
+        if(talisman != null){
+            for(Talisman t:talisman){
+                description += "(" +i+ ")"+t.getName()+"\n";
+                i++;
+            }
+        }
+        return description;
+    }
 }
