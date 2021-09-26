@@ -16,6 +16,18 @@ public class TP1 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
+        Parser p = new Parser(System.in);
+        
+        /*while (true) {
+            Token t = p.getNextToken();
+            if (t!=null) {
+                System.out.println(t);
+            }
+        }*/
+        
+        // test
+        //blocked?
         Room salle = new Room(0,0,"salle de coffre","NSE",null);
         Character Hero = new Character(salle,"Hero",null);
         Hero.moveWhere();
