@@ -47,8 +47,8 @@ public class Character {
     public void setTalisman(ArrayList<Talisman> talisman) {
         this.talisman = talisman;
     }
-    public void addTalisman(ArrayList<Talisman> talisman){
-        this.talisman.addAll(talisman);
+    public void addTalisman(Talisman talisman){
+        this.talisman.add(talisman);
     }
     public char moveWhere(){
         Scanner sc = new Scanner(System.in);
@@ -63,11 +63,11 @@ public class Character {
         }
     }
     
-    public String inventaire(){
+    public void inventaire(){
         String inv = "Votre inventaire :\n";
         for(Talisman t:talisman){
             inv += "-"+t.getName()+"\n";
         }
-        return inv;
+        System.out.println(inv);
     }
 }
