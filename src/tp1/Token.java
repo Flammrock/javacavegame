@@ -14,7 +14,7 @@ public class Token {
     protected String data;
 
     public Token(String data) {
-        this.data = data;
+        this.data = data.trim();
     }
 
     public String getData() {
@@ -22,11 +22,12 @@ public class Token {
     }
 
     public void setData(String data) {
-        this.data = data;
+        this.data = data.trim();
     }
     
-    public String ToString() {
-        return this.data;
+    @Override
+    public String toString() {
+        return "Token: ["+this.data+"]";
     }
     
 }

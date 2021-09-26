@@ -15,23 +15,27 @@ import java.util.Scanner;
  */
 public class Parser {
     
-    protected Scanner scanner;
+    protected Stream stream;
 
-    public Parser(InputStream stream) {
-        this.scanner = new Scanner(stream);
+    public Parser(Stream stream) {
+        this.stream = stream;
     }
     
     public boolean hasNextToken() {
-        return this.scanner.hasNext();
+        return this.stream.hasNext();
     }
     
-    protected String getUntilMeetChar(char specialchar) {
+    public String getUntilMeetChar(char specialchar) {
         String result = "";
         while (true) {
-            if (!this.scanner.hasNext()) return result;
-            char c = this.scanner.next().charAt(0);
+            if (!this.stream.hasNext()) return result;
+            char c = this.stream.next();
             if (c==specialchar) return result;
             if (c=='\n') return result;
+            if (c=='\r' && this.stream.peek()=='\n') {
+                this.stream.next();
+                return result;
+            }
             result += c;
         }
     }
@@ -42,7 +46,7 @@ public class Parser {
         if (!this.hasNextToken()) return null;
         
         // consume a character
-        char c = this.scanner.next().charAt(0);
+        char c = this.stream.peek();
             
         // comment
         if (c=='#') {
@@ -51,7 +55,10 @@ public class Parser {
         }
         
         // !
-        if (c=='!') return new Token("!");
+        if (c=='!') {
+            this.stream.next();
+            return new Token("!");
+        }
             
         // else
         return new Token(this.getUntilMeetChar(','));

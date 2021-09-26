@@ -5,6 +5,10 @@
  */
 package tp1;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 /**
  *
  * @author User
@@ -17,7 +21,8 @@ public class TP1 {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        Parser p = new Parser(System.in);
+        Parser p = new Parser(new Stream(System.in));
+        
         
         while (true) {
             Token t = p.getNextToken();
