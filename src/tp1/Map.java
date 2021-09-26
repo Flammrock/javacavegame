@@ -7,6 +7,7 @@ package tp1;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  *
@@ -182,7 +183,51 @@ public class Map {
     public void enterNewRoom(Room r){
         hero.setRoom(r);
         System.out.println(r.toString());
-        hero.setTalisman(r.talismans);
-        System.out.println(hero.inventaire());
+        hero.inventaire();
+        
+    }
+    
+    public boolean takeTalismans(int t){
+        if(t<0 || t>hero.getRoom().getTalismans().size()){
+            hero.getTalisman().add(hero.getRoom().getTalismans().get(t));
+            hero.getRoom().getTalismans().remove(t);
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public boolean putTalismans(int t){
+        if(t<0 || t>hero.getTalisman().size()){
+            hero.getRoom().getTalismans().add(hero.getTalisman().get(t));
+            hero.getTalisman().remove(t);
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    public char choiceChar(){
+        while(true){
+            System.out.println("Vous pouvez:");
+            if(hero.getRoom().getTalismans().size()>0){
+                System.out.println("Prendre un talismant dans la salle (P)");
+            }
+            if(hero.getTalisman().size()>0){
+                System.out.println("Jeter un talismant dans la salle (J)");
+            }
+            System.out.println("Voir votre inventaire (V)");
+            if(hero.getRoom().getTalismansLock().size()>0){
+                System.out.println("Utiliser un talismant sur un monstre (U)");
+            }
+            System.out.println("Deplacer votre hero dans une autre salle (D)");
+
+            Scanner sc = new Scanner(System.in);
+            String choise = sc.next();
+            choise = choise.toUpperCase();
+            char choiseLetter = choise.charAt(0);
+            if(choiseLetter=='P' || choiseLetter=='J' || choiseLetter=='V' || choiseLetter=='U' || choiseLetter=='D'){
+                return choiseLetter;
+            }
+        }
     }
 }
