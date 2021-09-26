@@ -120,7 +120,14 @@ public class Map {
     }
     public void moveCharacter(){
         int actualRoom = hero.getRoom().getX()+hero.getRoom().getY()*width;
-        char nextRoom = hero.moveWhere();
+        char nextRoom = '\0';
+        for(int i=0;i<hero.getRoom().getEntrances().length();i++){
+            nextRoom = hero.moveWhere();
+            if(hero.getRoom().getEntrances().charAt(i) == nextRoom){
+                break;
+            }
+            i++;
+        }
         int nextRoomIs;
         switch(nextRoom){
             case('N'):
