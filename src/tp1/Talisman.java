@@ -14,8 +14,8 @@ public class Talisman {
     protected Room room;
     protected String name;
     
-    public Talisman(Room room, String name) {
-        this.room = room;
+    public Talisman(/*Room room,*/ String name) {
+        //this.room = room;
         this.name = name;
     }
 
