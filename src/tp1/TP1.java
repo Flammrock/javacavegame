@@ -31,11 +31,17 @@ public class TP1 {
         
         // test
         //blocked?
-        Room salle = new Room(0,0,"salle de coffre","NSE",null);
+        Talisman medaillon1 = new Talisman("medaillon en Argent");
+        Talisman medaillon2 = new Talisman("medaillon en Or");
+        ArrayList<Talisman> t = new ArrayList();
+        t.add(medaillon1);
+        t.add(medaillon2);
+        Room salle = new Room(0,0,"salle de coffre","NSE",t);
         Character Hero = new Character(salle,"Hero",null);
         ArrayList<Room> r = new ArrayList();
         r.add(salle);
         Map m =  new Map(r,Hero,1,1);
+        System.out.println(salle.toString());
         m.moveCharacter();
     }
 }
