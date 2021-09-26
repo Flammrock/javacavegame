@@ -182,6 +182,7 @@ public class Map {
     public void enterNewRoom(Room r){
         hero.setRoom(r);
         System.out.println(r.toString());
-        hero.talisman.addAll(r.talismans);
+        hero.setTalisman(r.talismans);
+        System.out.println(hero.inventaire());
     }
 }
