@@ -74,8 +74,16 @@ public class Room {
     
     @Override
     public String toString(){
-        //TODO
-        return null;
+        String phrasesDescriptif = "Vous entrez dans : " + name;
+        if(talismans.size()==1){
+            phrasesDescriptif += "\nil y a 1 talisman dans cette salle :";
+        }else if(talismans.size()>0){
+            phrasesDescriptif += "\nil y a "+talismans.size()+" talisman dans cette salle :";
+        }
+        for(Talisman t:talismans){
+            phrasesDescriptif += "\n-"+t.getName();   
+        }
+        return phrasesDescriptif;
     }
     
 }
