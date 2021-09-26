@@ -55,7 +55,7 @@ public class Map {
             
             buildedrooms++;
             
-            if (buildedrooms >= this.width*this.height-1) return;
+            if (buildedrooms >= this.width*this.height) return;
         }
     }
     
