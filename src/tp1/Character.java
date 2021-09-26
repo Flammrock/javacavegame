@@ -65,8 +65,12 @@ public class Character {
     
     public void inventaire(){
         String inv = "Votre inventaire :\n";
-        for(Talisman t:talisman){
-            inv += "-"+t.getName()+"\n";
+        if(talisman!=null){
+            for(Talisman t:talisman){
+                inv += "-"+t.getName()+"\n";
+            }
+        }else{
+            inv += "vide\n";
         }
         System.out.println(inv);
     }
