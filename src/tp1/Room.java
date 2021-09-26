@@ -98,14 +98,11 @@ public class Room {
             phrasesDescriptif += "il y a 1 talisman dans cette salle :\n";
         }else if(talismans.size()>0){
             phrasesDescriptif += "il y a "+talismans.size()+" talismans dans cette salle :\n";
+        }else{
+            phrasesDescriptif += "il n'y a pas de talismans dans cette salle :\n";
         }
         for(Talisman t:talismans){
             phrasesDescriptif += "-"+t.getName()+"\n";   
-        }
-        if(talismans.size()==1){
-            phrasesDescriptif += "Vous mettez le talisement dans votre poche\n";
-        }else if(talismans.size()>0){
-            phrasesDescriptif += "Vous mettez les talisements dans votre poche\n";
         }
         return phrasesDescriptif;
     }
