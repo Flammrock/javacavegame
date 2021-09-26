@@ -7,6 +7,7 @@ package tp1;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -27,6 +28,61 @@ public class Map {
         this.height = height;
     }
     
+    protected List<Room> buildRoomFromParser(int totalbuiledrooms, Parser p) throws Exception {
+        // ignore useless comment '#'
+        
+        List<Room> buildedrooms = new ArrayList<>();
+        
+        while (true) {
+
+            Token token = p.peekToken();
+            String data = token.getData();
+
+            // get usefull comments
+            if (data.charAt(0) == '#') {
+
+                // try to get position
+                Parser p2 = new Parser(new Stream(data.substring(1)));
+                List<Token> tokens = p2.getTokenList();
+                if (tokens.size() >= 2) {
+                    int x = Integer.parseInt(tokens.get(0).getData());
+                    int y = Integer.parseInt(tokens.get(1).getData());
+                    p.skipComments();
+                    String roomName = p.getNextToken().getData();
+                    String roomEntrances = p.getNextToken().getData();
+                    String roomStartPosition = p.getNextToken().getData();
+                    System.out.println(x+","+y+" : "+roomName+" - "+roomEntrances+" - "+roomStartPosition);
+                    buildedrooms.add(new Room(x, y, roomName, roomEntrances, null));
+                    return buildedrooms;
+                }
+
+                // try to get row info
+                else if (data.contains("row")) {
+                    int x = this.width;
+                    int y = totalbuiledrooms/this.height;
+                    while (x!=0) {
+                        p.skipComments();
+                        String roomName = p.getNextToken().getData();
+                        String roomEntrances = p.getNextToken().getData();
+                        String roomStartPosition = p.getNextToken().getData();
+                        System.out.println((this.width-x)+","+y+" : "+roomName+" - "+roomEntrances+" - "+roomStartPosition);
+                        buildedrooms.add(new Room(this.width-x, y, roomName, roomEntrances, null));
+                        x--;
+                    }
+                    return buildedrooms;
+                }
+                
+                p.getNextToken();
+                continue;
+
+            }
+            
+            throw new Exception("a line which start by '#' with position or row informations was expected");
+        
+        }
+        
+    }
+    
     public void buildFromInputStream(InputStream istream) throws Exception, NumberFormatException {
         
         
@@ -45,6 +101,7 @@ public class Map {
                 this.width = Integer.parseInt(p.getNextToken().getData());
                 this.height = Integer.parseInt(p.getNextToken().getData());
                 mapsize = true;
+                System.out.println("Map Size : width="+this.width+", height="+this.height);
                 continue;
             }
             
@@ -54,7 +111,10 @@ public class Map {
             // else, map size must be defined
             if (!mapsize) throw new Exception("Map size must be defined at first");
             
-            buildedrooms++;
+            List<Room> builedrooms = this.buildRoomFromParser(buildedrooms,p);
+            buildedrooms+=builedrooms.size();
+            
+            rooms.addAll(builedrooms);
             
             if (buildedrooms >= this.width*this.height) return;
         }
