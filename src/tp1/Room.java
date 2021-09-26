@@ -83,6 +83,11 @@ public class Room {
         for(Talisman t:talismans){
             phrasesDescriptif += "\n-"+t.getName();   
         }
+        if(talismans.size()==1){
+            System.out.println("Vous mettez le talisement dans votre poche");
+        }else if(talismans.size()>0){
+            System.out.println("Vous mettez les talisements dans votre poche");
+        }
         return phrasesDescriptif;
     }
     
