@@ -61,4 +61,11 @@ public class Character {
         }
     }
     
+    public String inventaire(){
+        String inv = "Votre inventaire :\n";
+        for(Talisman t:talisman){
+            inv += "-"+t.getName()+"\n";
+        }
+        return inv;
+    }
 }
