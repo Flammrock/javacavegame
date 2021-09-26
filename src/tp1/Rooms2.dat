@@ -1,0 +1,44 @@
+#   +--------------+--------------+--------------+--------------+
+#   |   Entrance   |   Room of    | Room of the  |  Room of     |
+#   |              | anti-patterns| collections  |  threads     |
+#   |              >              >              >              |
+#   | {-Welcome    | {-Parallel   <              <              |
+#   |   booklet-}  |   arrays-}   |              |              |
+#   |              |              |              |              |
+#   +------AV------+------AV------+------AV------+------AV------+
+#   |   Clean      |     DRY      |   Room of    |  Room of     |
+#   |   room       |    room      |  the bugs    | coupled code |
+#   |              >              >  {-Debugger  >              |
+#   | {-Function-} < <[Unnecessary<   manual-}   <              |
+#   |              |   cut and    |              |              |
+#   |              |    paste]>   |              |              |
+#   +------AV------+-------V------+------AV------+------V-------+
+#   |  Room of     |  Room of the |   Room of    | Examination  |
+#   |  the streams | endless loop | refactoring  |    room      |
+#   |              >              <              >              |
+#   | {-Java XP-}  | {-Missing    |              |<[Examinator]>|
+#   |   <[Bug]>    |    Exit      |              |              |
+#   |              |  condition-} |              |              |
+#   +--------------+--------------+--------------+------V-------+
+#                                                      Exit
+#
+# Geometry
+!4,3
+#
+# Top row
+Entrance,SE,true
+Room of anti-patterns,SE,false
+Room of the collections,WSE,false
+Room of the threads,WS,false
+#
+# Middle row
+Clean room,NSE,false
+DRY room,NSEW,false
+Room of the bugs,NSEW,false
+Room of coupled code,NSW,false
+#
+# Bottom row
+Room of the streams,NE,false
+Room of the endless loop,,false
+Room of refactoring,NSE,false
+Examination room,S,false
