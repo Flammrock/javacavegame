@@ -47,4 +47,31 @@ public class Map {
         this.height = height;
     }
     
+    public void descriptionAlentoure(int x,int y){
+        Room actualRoom = rooms.get(x*width+y);
+        String Entrances = actualRoom.getEntrances();
+        System.out.println("Description alentour:");
+        int i = 0;
+        while(i!=Entrances.length()){
+            if(Entrances.charAt(i) == 'N'){
+                System.out.print("La porte du Nord mene a :");
+                System.out.println(rooms.get(x-1*width+y).getName());
+                continue;
+            }
+            if(Entrances.charAt(i) == 'S'){
+                System.out.print("La porte du Sud mene a :");
+                System.out.println(rooms.get(x+1*width+y).getName());
+                continue;
+            }
+            if(Entrances.charAt(i) == 'E'){
+                System.out.print("La porte de l'Est mene a :");
+                System.out.println(rooms.get(x*width+y+1).getName());
+                continue;
+            }
+            if(Entrances.charAt(i) == 'W'){
+                System.out.print("La porte de l'Ouest mene a :");
+                System.out.println(rooms.get(x-1*width+y-1).getName());
+            }
+        }
+    }
 }
