@@ -74,19 +74,19 @@ public class Room {
     
     @Override
     public String toString(){
-        String phrasesDescriptif = "Vous entrez dans : " + name;
+        String phrasesDescriptif = "Vous entrez dans : " + name + "\n";
         if(talismans.size()==1){
-            phrasesDescriptif += "\nil y a 1 talisman dans cette salle :";
+            phrasesDescriptif += "il y a 1 talisman dans cette salle :\n";
         }else if(talismans.size()>0){
-            phrasesDescriptif += "\nil y a "+talismans.size()+" talismans dans cette salle :";
+            phrasesDescriptif += "il y a "+talismans.size()+" talismans dans cette salle :\n";
         }
         for(Talisman t:talismans){
-            phrasesDescriptif += "\n-"+t.getName();   
+            phrasesDescriptif += "-"+t.getName()+"\n";   
         }
         if(talismans.size()==1){
-            phrasesDescriptif += "\nVous mettez le talisement dans votre poche\n";
+            phrasesDescriptif += "Vous mettez le talisement dans votre poche\n";
         }else if(talismans.size()>0){
-            phrasesDescriptif += "\nVous mettez les talisements dans votre poche\n";
+            phrasesDescriptif += "Vous mettez les talisements dans votre poche\n";
         }
         return phrasesDescriptif;
     }
