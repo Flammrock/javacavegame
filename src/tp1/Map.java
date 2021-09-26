@@ -5,6 +5,7 @@
  */
 package tp1;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -23,6 +24,39 @@ public class Map {
         this.hero = hero;
         this.width = width;
         this.height = height;
+    }
+    
+    public void buildFromInputStream(InputStream istream) throws Exception, NumberFormatException {
+        
+        
+        Parser p = new Parser(new Stream(istream));
+        
+        boolean mapsize = false;
+        
+        int buildedrooms = 0;
+        
+        while (true) {
+            Token token = p.getNextToken();
+            
+            // if token is "!"
+            if (token.getData().equals("!")) {
+                if (mapsize) throw new Exception("Map size already defined");
+                this.width = Integer.parseInt(p.getNextToken().getData());
+                this.height = Integer.parseInt(p.getNextToken().getData());
+                mapsize = true;
+                continue;
+            }
+            
+            // if comment '#' and mapsize not defined then ignore
+            if (!mapsize && token.getData().charAt(0)=='#') continue;
+            
+            // else, map size must be defined
+            if (!mapsize) throw new Exception("Map size must be defined at first");
+            
+            buildedrooms++;
+            
+            if (buildedrooms >= this.width*this.height-1) return;
+        }
     }
     
     public ArrayList<Room> getRooms() {
