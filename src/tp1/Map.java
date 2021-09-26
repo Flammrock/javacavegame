@@ -20,6 +20,13 @@ public class Map {
     protected ArrayList<Room> rooms;
     protected int width;
     protected int height;
+    
+    public Map() {
+        this.rooms = new ArrayList<>();
+        this.hero = null;
+        this.width = 0;
+        this.height = 0;
+    }
 
     public Map(ArrayList<Room> rooms, Character hero, int width, int height) {
         this.rooms = rooms;
