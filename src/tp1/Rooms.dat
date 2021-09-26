@@ -1,0 +1,21 @@
+# Room definitions (X,Y)
+!3,3
+# 0,0
+Entrance,SE,true
+# 1,0
+Anti-pattern class,SEW,false
+# 2,0
+Room of the collections,SW,false
+# 0,1
+Clean room,NSE,false
+# 1,1
+DRY room,NSEW,false
+# 2,1
+Room of the bugs,NSW,false
+# 0,2
+Room of the streams,NE,false
+# 1,2
+Room of the endless loop,,false
+# 2,2
+# Exam 
+Examination room,NSW,false
