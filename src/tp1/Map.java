@@ -121,12 +121,15 @@ public class Map {
     public void moveCharacter(){
         int actualRoom = hero.getRoom().getX()+hero.getRoom().getY()*width;
         char nextRoom = '\0';
-        for(int i=0;i<hero.getRoom().getEntrances().length();i++){
+        boolean isUncorrect = true;
+        while(isUncorrect){
             nextRoom = hero.moveWhere();
-            if(hero.getRoom().getEntrances().charAt(i) == nextRoom){
-                break;
+            for(int i=0;i<hero.getRoom().getEntrances().length();i++){
+                if(hero.getRoom().getEntrances().charAt(i) == nextRoom){
+                    isUncorrect = false;
+                    break;
+                }
             }
-            i++;
         }
         int nextRoomIs;
         switch(nextRoom){
