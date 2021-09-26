@@ -1,0 +1,8 @@
+# Talisman definitions
+# Room name, Talisman
+Entrance,Welcome booklet
+Room of anti-patterns,Parallel arrays
+Clean room,Function
+Room of the streams,Java XP
+Room of the bugs,Debugger manual
+Room of the endless loop,Missing exit condition
