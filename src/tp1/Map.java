@@ -118,7 +118,7 @@ public class Map {
             }
         }
     }
-    public void moveCharacter(){
+    public Room moveCharacter(){
         int actualRoom = hero.getRoom().getX()+hero.getRoom().getY()*width;
         char nextRoom = '\0';
         boolean isUncorrect = true;
@@ -170,12 +170,18 @@ public class Map {
                 nextRoomIs = actualRoom;
             break;
         }
-        hero.setRoom(rooms.get(nextRoomIs));
+        return rooms.get(nextRoomIs);
     }
     private boolean isRoomAvailable(int x,int y){
         if(x<0 || y<0 || x>width-1 || y>height-1){
             return false;
         }
         return true;
+    }
+    
+    public void enterNewRoom(Room r){
+        hero.setRoom(r);
+        System.out.println(r.toString());
+        hero.talisman.addAll(r.talismans);
     }
 }
