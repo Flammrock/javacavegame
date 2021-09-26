@@ -50,6 +50,11 @@ public class Character {
     public void addTalisman(Talisman talisman){
         this.talisman.add(talisman);
     }
+
+    /**
+     *
+     * @return retourne la sortie choisie par l'utilisateur
+     */
     public char moveWhere(){
         Scanner sc = new Scanner(System.in);
         while(true){
