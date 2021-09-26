@@ -61,7 +61,7 @@ public class TP1 {
         
         // on fait entrer le héro dans la salle
         m.enterNewRoom(m.getRooms().get(0));
-        
+        m.quefaire();
         
         
         
