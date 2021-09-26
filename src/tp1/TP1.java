@@ -5,6 +5,8 @@
  */
 package tp1;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author User
@@ -31,8 +33,9 @@ public class TP1 {
         //blocked?
         Room salle = new Room(0,0,"salle de coffre","NSE",null);
         Character Hero = new Character(salle,"Hero",null);
-        Map m =  new Map(null,Hero,1,1);
+        ArrayList<Room> r = new ArrayList();
+        r.add(salle);
+        Map m =  new Map(r,Hero,1,1);
         m.moveCharacter();
     }
-    
 }
