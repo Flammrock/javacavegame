@@ -162,7 +162,7 @@ public class Map {
     public void descriptionAlentoure(int x,int y){
         Room actualRoom = rooms.get(x*width+y);
         String Entrances = actualRoom.getEntrances();
-        System.out.println("Description alentour:");
+        System.out.println("Description alentoure:");
         int i = 0;
         while(i!=Entrances.length()){
             
