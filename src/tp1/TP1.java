@@ -58,7 +58,7 @@ public class TP1 {
             m.quefaire();
             
         } catch (Exception e) {
-            System.out.println("fail build rooms");
+            System.out.println(e.getMessage());
         }
         
         
