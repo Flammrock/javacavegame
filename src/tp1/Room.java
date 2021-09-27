@@ -13,32 +13,19 @@ import java.util.ArrayList;
  */
 public class Room {
     
-    protected int x;
-    protected int y;
-    protected String name;
-    protected String entrances;
-    protected ArrayList<Talisman> talismans;
-    protected ArrayList<Talisman> talismansLock;
+    private int x;
+    private int y;
+    private String name;
+    private String entrances;
+    private ArrayList<Talisman> talismans;
+    private ArrayList<Talisman> talismansLock;
+    private boolean isStart;
     
-    public Room(int x, int y, String name, String entrances) {
-        this.x = x;
-        this.y = y;
+    public Room(int x, int y, String name, String entrances, boolean isStart) {
         this.name = name;
         this.entrances = entrances;
         this.talismans = new ArrayList<>();
-    }
-
-    public Room(int x, int y, String name, String entrances, ArrayList<Talisman> talismans) {
-        this.x = x;
-        this.y = y;
-        this.name = name;
-        this.entrances = entrances;
-        this.talismans = talismans;
-    }
-    
-    public static Room buildFromFile(String filename) {
-        // TODO
-        return null;
+        this.isStart = isStart;
     }
 
     public ArrayList<Talisman> getTalismans() {

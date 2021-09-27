@@ -44,19 +44,19 @@ public class TP1 {
         // on créé une map vide
         try {
             Map m =  new Map.Builder()
-                    .roomsFromStream(new Stream(TP1.class.getResourceAsStream("Rooms2.dat")))
-                    .talismansFromStream(new Stream(TP1.class.getResourceAsStream("Talismans.dat")))
+                    .loadRoomsFromStream(new Stream(TP1.class.getResourceAsStream("Rooms2.dat")))
+                    .loadTalismanFromStream(new Stream(TP1.class.getResourceAsStream("Talismans.dat")))
                     .build();
 
             // on créé le héro et on le met dans la 1ère salle de la liste
-            Character Hero = new Character(m.getRooms().get(0),"Hero",null);
+            /*Character Hero = new Character(m.getRooms().get(0),"Hero",null);
 
             // on ajoute le héro dans la map
             m.setHero(Hero);
 
             // on fait entrer le héro dans la salle
             m.enterNewRoom(m.getRooms().get(0));
-            m.quefaire();
+            m.quefaire();*/
             
         } catch (Exception e) {
             e.printStackTrace(System.out);

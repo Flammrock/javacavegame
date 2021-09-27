@@ -21,6 +21,9 @@ public class Map {
         public ParseException(String message) {
             super(message);
         }
+        public ParseException(Exception e) {
+            super(e);
+        }
     }
     
     public static class Builder {
@@ -70,164 +73,93 @@ public class Map {
             return this;
         }
         
-        /**
-        * This method try to extract all rooms from a Stream Object
-        * 
-        * Syntax of the stream :
-        * !3,3
-        * # 0,0
-        * Room name 1,SE,true
-        * # 1,0
-        * Room name 2,SEW,false
-        * ...
-        * 
-        * @param stream the stream
-        */
-        Builder roomsFromStream(Stream stream) throws Map.ParseException {
+        
+        Builder loadRoomsFromStream(Stream stream) throws Map.ParseException {
             
-            try {
-                
-                // build a parser
-                Parser p = new Parser(stream);
-                
-                // variable which contains the number of built rooms
-                int buildedrooms = 0;
-                
-                // while we can get rooms
-                while (true) {
-                    
-                    // get the next token
-                    Token token = p.getNextToken();
-
-                    // if token is "!"  (try to extract map size)
-                    if (token.getData().equals("!")) {
-                        if (this.isMapSizeValid()) throw new Map.ParseException("Map size already defined");
-                        try {
-                            this.width = Integer.parseInt(p.getNextToken().getData());
-                            this.height = Integer.parseInt(p.getNextToken().getData());
-                        } catch (Exception e) {
-                            throw new Map.ParseException(e.getMessage());
-                        }
-                        System.out.println("Map Size : width="+this.width+", height="+this.height);
-                        continue;
-                    }
-
-                    // if comment '#' and map size not defined then ignore
-                    if (!this.isMapSizeValid() && token.getData().charAt(0)=='#') continue;
-
-                    // else, map size must be defined
-                    if (!this.isMapSizeValid()) throw new Map.ParseException("Map size must be defined at first");
-
-                    List<Room> builedrooms = this.buildRoomFromParser(buildedrooms,p);
-                    buildedrooms+=builedrooms.size();
-
-                    this.rooms.addAll(builedrooms);
-                    
-                    // according to the size of the map, we check if we have build all the rooms
-                    if (buildedrooms >= this.width*this.height) return this;
-                    
-                    // else continue to build rooms
-                }
-                
-            } catch (Exception e) {
-                throw new Map.ParseException(e.getMessage());
+            int x = 0;
+            int y = 0;
+            
+            // create a parser over the stream
+            Parser p = new Parser(stream);
+            List<Token> tokens = p.getNextObject(); // get the next object
+            
+            // if map size not set or invalid, try to extract it
+            if (!this.isMapSizeValid()) {
+                this.extractMapSize(tokens);
+                System.out.println("[MapSize] Width = "+this.width+", Height = "+this.height);
             }
             
-        }
-    
-        /**
-        * This method try to extract all talismans from a Stream Object
-        * 
-        * Syntax of the stream (line which start with '#' are comments):
-        * Room name 1, Talisman 1
-        * Room name 2, Talisman 2
-        * ...
-        * 
-        * @param stream the stream
-        */
-        Builder talismansFromStream(Stream stream) throws Map.ParseException {
-            try {
-                Parser p = new Parser(stream);
-                while (true) {
-                    if (!p.hasNextToken()) break;
-                    p.skipComments();
-                    String roomName = p.getNextToken().getData();
-                    String talismanName = p.getNextToken().getData();
-                    System.out.println("load Talisman : "+roomName+" - "+talismanName);
-                    this.talismans.add(new Talisman(roomName,talismanName));
-                    p.skipComments();
+            // extract all rooms
+            while (true) {
+                tokens = p.getNextObject(); // get the next object
+                if (tokens.size() < 3) throw new Map.ParseException("data is missing when loading room");
+                
+                // build the room
+                String roomName = tokens.get(0).getData();
+                String roomDirections = tokens.get(1).getData();
+                String roomIsStart = tokens.get(2).getData();
+                Room room = new Room(x, y, roomName, roomDirections, roomIsStart.toLowerCase().equals("true"));
+                
+                this.rooms.add(room); // add the room
+                
+                System.out.println("[Room] "+x+","+y+" : "+roomName+" - "+roomDirections+" - "+roomIsStart);
+                
+                // compute positions
+                x++;
+                if (x > this.width-1) {
+                    x = 0;
+                    y++;
+                    if (y > this.height-1) break;
                 }
-                return this;
-            } catch (Exception e) {
-                throw new Map.ParseException(e.getMessage());
             }
+            
+            return this;
         }
         
-        /**
-        * This method try to build rooms from a Parser Object
-        * 
-        * @param totalbuiledrooms the number of rooms already built, this information can be use to compute positions of rooms
-        * @param p the parser which contains the stream, with this parser we can get the next token easly
-        * @return return the list of rooms extracted from the parser
-        */
-        private List<Room> buildRoomFromParser(int totalbuiledrooms, Parser p) throws Map.ParseException {
-            // ignore useless comment '#'
+        Builder loadTalismanFromStream(Stream stream) throws Map.ParseException {
+            // create a parser over the stream
+            Parser p = new Parser(stream);
             
-            try {
-
-                List<Room> buildedrooms = new ArrayList<>();
-
-                while (true) {
-
-                    Token token = p.peekToken();
-                    String data = token.getData();
-
-                    // get usefull comments
-                    if (data.charAt(0) == '#') {
-
-                        // try to get position
-                        Parser p2 = new Parser(new Stream(data.substring(1)));
-                        List<Token> tokens = p2.getTokenList();
-                        if (tokens.size() >= 2) {
-                            int x = Integer.parseInt(tokens.get(0).getData());
-                            int y = Integer.parseInt(tokens.get(1).getData());
-                            p.skipComments();
-                            String roomName = p.getNextToken().getData();
-                            String roomEntrances = p.getNextToken().getData();
-                            String roomStartPosition = p.getNextToken().getData();
-                            System.out.println(x+","+y+" : "+roomName+" - "+roomEntrances+" - "+roomStartPosition);
-                            buildedrooms.add(new Room(x, y, roomName, roomEntrances));
-                            return buildedrooms;
-                        }
-
-                        // try to get row info
-                        else if (data.contains("row")) {
-                            int x = this.width;
-                            int y = totalbuiledrooms/this.height;
-                            while (x!=0) {
-                                p.skipComments();
-                                String roomName = p.getNextToken().getData();
-                                String roomEntrances = p.getNextToken().getData();
-                                String roomStartPosition = p.getNextToken().getData();
-                                System.out.println((this.width-x)+","+y+" : "+roomName+" - "+roomEntrances+" - "+roomStartPosition);
-                                buildedrooms.add(new Room(this.width-x, y, roomName, roomEntrances));
-                                x--;
-                            }
-                            return buildedrooms;
-                        }
-
-                        p.getNextToken();
-                        continue;
-
-                    }
-
-                    throw new Map.ParseException("a line which start by '#' with position or row informations was expected");
-
-                }
-
-            } catch (Exception e) {
-                throw new Map.ParseException(e.getMessage());
+            // extract all talismans
+            while (true) {
+                List<Token> tokens = p.getNextObject(); // get the next object
+                
+                // if no talismans to load, break the loop
+                if (tokens.isEmpty()) break;
+                
+                // chech if enough data
+                if (tokens.size() < 2) throw new Map.ParseException("data is missing when loading talisman");
+                
+                // build the room
+                String talismanRoomName = tokens.get(0).getData();
+                String talismanName = tokens.get(1).getData();
+                Talisman talisman = new Talisman(talismanRoomName,talismanName);
+                
+                System.out.println("[Talisman] Room="+talismanRoomName+", Name="+talismanName);
+                
+                this.talismans.add(talisman);
             }
+            
+            return this;
+        }
+        
+        private void extractMapSize(List<Token> tokens) throws Map.ParseException {
+            
+            // check if there are enough data
+            if (tokens == null || tokens.size() < 3) {
+                throw new Map.ParseException("unable to extract width and height");
+            }
+
+            // first token must be "!" (to specify the size)
+            if (tokens.get(0).getData().equals("!")) {
+                try {
+                    this.width = Integer.parseInt(tokens.get(1).getData());
+                    this.height = Integer.parseInt(tokens.get(2).getData());
+                } catch (Exception e) {
+                    throw new Map.ParseException(e); // chain exception to preserve log trace
+                }
+            }
+            
         }
 
         /**
@@ -297,14 +229,14 @@ public class Map {
     protected int width;
     protected int height;
     
-    public Map() {
+    protected Map() {
         this.rooms = new ArrayList<>();
         this.hero = null;
         this.width = 0;
         this.height = 0;
     }
 
-    public Map(ArrayList<Room> rooms, Character hero, int width, int height) {
+    protected Map(ArrayList<Room> rooms, Character hero, int width, int height) {
         this.rooms = rooms;
         this.hero = hero;
         this.width = width;

@@ -17,12 +17,25 @@ import java.util.Scanner;
  */
 public class Parser {
     
+    // the stream
     protected Stream stream;
-    protected String current;
+    
+    // contains the last token extracted from the stream
+    protected Token current;
+    
+    // track the line when parsing the stream
+    protected int currentline;
+    
+    
+    protected char charComment   = '#';
+    protected char charSize      = '!';
+    protected char charSeparator = ',';
+    
 
     public Parser(Stream stream) {
         this.stream = stream;
-        this.current = "";
+        this.current = null;
+        this.currentline = 0;
     }
     
     public boolean hasNextToken() {
@@ -32,20 +45,36 @@ public class Parser {
     public String getUntilMeetChar(char specialchar) {
         String result = "";
         while (true) {
+            
+            // if no next character return the built string
             if (!this.stream.hasNext()) return result;
+            
+            // consume a character from the stream
             char c = this.stream.next();
+            
+            // stop read
             if (c==specialchar) return result;
-            if (c=='\n') return result;
+            
+            // unix line feed \n
+            if (c=='\n') {
+                this.currentline++; // track line
+                return result;
+            }
+            
+            // windows line feed \r\n
             if (c=='\r' && this.stream.peek()=='\n') {
+                this.currentline++; // track line
                 this.stream.next();
                 return result;
             }
+            
+            // concat the char to the result string
             result += c;
         }
     }
     
     public Token peekToken() {
-        return new Token(this.current);
+        return this.current;
     }
     
     public Token getNextToken() {
@@ -57,22 +86,22 @@ public class Parser {
         char c = this.stream.peek();
             
         // comment
-        if (c=='#') {
+        if (c==this.charComment) {
             // read the line and return the token
-            this.current = this.getUntilMeetChar('\n');
-            return new Token(this.current);
+            this.current = new Token(this.getUntilMeetChar('\n'));
+            return this.current;
         }
         
         // !
-        if (c=='!') {
+        if (c==this.charSize) {
             this.stream.next();
-            this.current = "!";
-            return new Token("!");
+            this.current = new Token(String.valueOf(this.charSize));
+            return this.current;
         }
             
         // else
-        this.current = this.getUntilMeetChar(',');
-        return new Token(this.current);
+        this.current = new Token(this.getUntilMeetChar(this.charSeparator));
+        return this.current;
         
     }
     
@@ -85,14 +114,36 @@ public class Parser {
     }
     
     public void skipComments() {
-        if (!this.hasNextToken()) return;
+        this.ignoreLinesStartWith(this.charComment);
+    }
+    
+    public List<Token> getNextObject() {
+        List<Token> tokens = new ArrayList<>();
+        while (true) {
+            this.skipComments();
+            break;
+        }
+        int line = this.currentline;
+        while (line==this.currentline) {
+            if (!this.hasNextToken()) return tokens;
+            tokens.add(this.getNextToken());
+        }
+        return tokens;
+    }
+    
+    
+    
+    private boolean ignoreLinesStartWith(char a) {
+        if (!this.hasNextToken()) return false;
+        boolean b = false;
         while (true) {
             char c = this.stream.peek();
-            if (c=='#') {
+            if (c==a) {
                 this.getUntilMeetChar('\n');
+                b = true;
                 continue;
             }
-            return;
+            return b;
         }
     }
     
