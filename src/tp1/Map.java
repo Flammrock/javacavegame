@@ -16,7 +16,7 @@ import java.util.Scanner;
  */
 public class Map {
     
-    class Builder {
+    public static class Builder {
     
         ArrayList<Room> rooms;
         Character hero;
