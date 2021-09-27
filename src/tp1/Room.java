@@ -96,6 +96,10 @@ public class Room {
         this.entrances = entrances;
     }
     
+    /**
+     *
+     * @return retourne la description de la salle avec son contenu
+     */
     @Override
     public String toString(){
         String phrasesDescriptif = "Vous entrez dans : " + name + "\n";
@@ -111,6 +115,11 @@ public class Room {
         }
         return phrasesDescriptif;
     }
+    
+    /**
+     *
+     * @return retourn la liste de talisment dans la salle
+     */
     public String getTalismansToString(){
         String description = "";
         int i=0;
