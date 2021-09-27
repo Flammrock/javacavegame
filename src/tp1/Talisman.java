@@ -11,8 +11,8 @@ package tp1;
  */
 public class Talisman implements Copiable {
     
-    protected String name;
-    protected String originRoomName;
+    private String name;
+    private String originRoomName;
     
     public Talisman(String roomName, String name) {
         this.originRoomName = roomName;

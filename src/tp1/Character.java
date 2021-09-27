@@ -14,22 +14,22 @@ import java.util.Scanner;
  */
 public class Character {
     
-    protected Room room;
-    protected String name;
-    protected ArrayList<Talisman> talisman;
+    private String name;
+    private String originRoomName;
+    private ArrayList<Talisman> talisman;
 
-    public Character(Room room, String name, ArrayList<Talisman> talisman) {
-        this.room = room;
+    public Character(String originRoomName, String name, ArrayList<Talisman> talisman) {
+        this.originRoomName = originRoomName;
         this.name = name;
         this.talisman = talisman;
     }
 
-    public Room getRoom() {
-        return room;
+    public String getOriginRoomName() {
+        return originRoomName;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setOriginRoomName(String originRoomName) {
+        this.originRoomName = originRoomName;
     }
 
     public String getName() {
@@ -53,12 +53,13 @@ public class Character {
 
     /**
      *
+     * @param entrances
      * @return retourne la sortie choisie par l'utilisateur
      */
-    public char moveWhere(){
+    public char moveWhere(String entrances){
         Scanner sc = new Scanner(System.in);
         while(true){
-            System.out.println("Quel est votre prochaine destination? ("+room.getEntrances()+")");
+            System.out.println("Quel est votre prochaine destination? ("+entrances+")");
             String nextRoom = sc.next();
             nextRoom = nextRoom.toUpperCase();
             char nextPorte = nextRoom.charAt(0);

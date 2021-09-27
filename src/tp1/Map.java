@@ -38,6 +38,10 @@ public class Map {
         // contains the hero
         private Character hero;
         
+        private interface Callback {
+            void call(List<Token> tokens) throws Map.ParseException;
+        }
+        
         // map size
         private int width;
         private int height;
@@ -117,6 +121,56 @@ public class Map {
         }
         
         Builder loadTalismanFromStream(Stream stream) throws Map.ParseException {
+            this.loadObjectFromStream(stream, (List<Token> tokens) -> {
+                
+                // chech if enough data
+                if (tokens.size() < 2) throw new Map.ParseException("data is missing when loading talisman");
+                
+                // extract data
+                String roomName = tokens.get(0).getData();
+                String talismanName = tokens.get(1).getData();
+                
+                // build talisman
+                Talisman talisman = new Talisman(roomName,talismanName);
+                
+                System.out.println("[Talisman] Room="+roomName+", Name="+talismanName); // log
+                
+                // add talisman
+                this.talismans.add(talisman);
+                
+            });
+            return this;
+        }
+        
+        Builder loadCharacterFromStream(Stream stream) throws Map.ParseException {
+            this.loadObjectFromStream(stream, (List<Token> tokens) -> {
+                
+                // chech if enough data
+                if (tokens.size() < 3) throw new Map.ParseException("data is missing when loading character");
+                
+                // extract data
+                String roomName = tokens.get(0).getData();
+                String characterName = tokens.get(1).getData();
+                String talismanName = tokens.get(2).getData();
+                
+                List<Talisman> talismans = new ArrayList<>();
+                talismans.add()
+                
+                // build character
+                Character character = new Character(roomName,characterName,talismanName);
+                
+                System.out.println("[Talisman] Room="+talismanRoomName+", Name="+talismanName); // log
+                
+                // add talisman
+                this.talismans.add(talisman);
+                
+            });
+            return this;
+        }
+        
+        
+        
+        private Builder loadObjectFromStream(Stream stream, Callback callback) throws Map.ParseException {
             // create a parser over the stream
             Parser p = new Parser(stream);
             
@@ -124,20 +178,12 @@ public class Map {
             while (true) {
                 List<Token> tokens = p.getNextObject(); // get the next object
                 
-                // if no talismans to load, break the loop
+                // if no object to load, break the loop
                 if (tokens.isEmpty()) break;
                 
-                // chech if enough data
-                if (tokens.size() < 2) throw new Map.ParseException("data is missing when loading talisman");
+                // build the object by calling the callback
+                callback.call(tokens);
                 
-                // build the room
-                String talismanRoomName = tokens.get(0).getData();
-                String talismanName = tokens.get(1).getData();
-                Talisman talisman = new Talisman(talismanRoomName,talismanName);
-                
-                System.out.println("[Talisman] Room="+talismanRoomName+", Name="+talismanName);
-                
-                this.talismans.add(talisman);
             }
             
             return this;
