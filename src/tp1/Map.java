@@ -200,33 +200,33 @@ public class Map {
     }
     
     public void descriptionAlentoure(int x,int y){
-        Room actualRoom = rooms.get(x*width+y);
+        Room actualRoom = rooms.get(x+y*width);
         String Entrances = actualRoom.getEntrances();
         System.out.println("Description alentoure:");
         int i = 0;
         while(i!=Entrances.length()){
             
-            if(Entrances.charAt(i) == 'N' && isRoomAvailable(x-1,y)){
+            if(Entrances.charAt(i) == 'N' && isRoomAvailable(x,y-1)){
                 System.out.print("La porte du (N)ord mene a :");
-                System.out.println(rooms.get(x-1*width+y).getName());
+                System.out.println(rooms.get(x+width*(y-1)).getName());
                 i++;
                 continue;
             }
-            if(Entrances.charAt(i) == 'S' && isRoomAvailable(x+1,y)){
+            if(Entrances.charAt(i) == 'S' && isRoomAvailable(x,y+1)){
                 System.out.print("La porte du (S)ud mene a :");
-                System.out.println(rooms.get(x+1*width+y).getName());
+                System.out.println(rooms.get(x+width*(y+1)).getName());
                 i++;
                 continue;
             }
-            if(Entrances.charAt(i) == 'E' && isRoomAvailable(x,y+1)){
+            if(Entrances.charAt(i) == 'E' && isRoomAvailable(x+1,y)){
                 System.out.print("La porte de l'(E)st mene a :");
-                System.out.println(rooms.get(x*width+y+1).getName());
+                System.out.println(rooms.get(x+1+y*width).getName());
                 i++;
                 continue;
             }
-            if(Entrances.charAt(i) == 'W' && isRoomAvailable(x,y-1)){
+            if(Entrances.charAt(i) == 'W' && isRoomAvailable(x-1,y)){
                 System.out.print("La porte de l'(O)uest mene a :");
-                System.out.println(rooms.get(x-1*width+y-1).getName());
+                System.out.println(rooms.get(x-1+width*y).getName());
                 i++;
             }
         }
@@ -302,8 +302,7 @@ public class Map {
         hero.setRoom(r);
         System.out.println(r.toString());
         descriptionAlentoure(r.getX(),r.getY());
-        hero.inventaire();
-        
+        hero.inventaire();        
     }
     
     public boolean takeTalismans(int t){
