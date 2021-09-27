@@ -16,7 +16,7 @@ import java.util.Scanner;
  */
 public class Map {
     
-    class MapBuilder {
+    class Builder {
     
         ArrayList<Room> rooms;
         Character hero;
@@ -30,7 +30,7 @@ public class Map {
             this.mapsize = this.width > 0 && this.height > 0;
         }
         
-        MapBuilder() {
+        Builder() {
             this.rooms = new ArrayList<>();
             this.hero = null;
             this.width = 0;
@@ -42,20 +42,20 @@ public class Map {
             return new Map(this.rooms,this.hero,this.width,this.height);
         }
         
-        MapBuilder setWidth(int width) throws Exception {
+        Builder setWidth(int width) throws Exception {
             if (mapsize) throw new Exception("Map size already defined");
             this.width = width;
             this.updateMapSize();
             return this;
         }
-        MapBuilder setHeight(int height) throws Exception {
+        Builder setHeight(int height) throws Exception {
             if (mapsize) throw new Exception("Map size already defined");
             this.height = height;
             this.updateMapSize();
             return this;
         }
         
-        MapBuilder roomsFromStream(Stream stream) throws Exception {
+        Builder roomsFromStream(Stream stream) throws Exception {
             
             Parser p = new Parser(stream);
             
