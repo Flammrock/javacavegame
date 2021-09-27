@@ -344,9 +344,9 @@ public class Map {
     }
     
     /**
-     *
-     * @param x
-     * @param y
+     *Cette fonction décrit les salles qui sont connecter a la salle entrer
+     * @param x position x dans le labyrinthe 
+     * @param y position y dans le labyrinthe 
      */
     public void descriptionAlentoure(int x,int y){
         Room actualRoom = rooms.get(x+y*width);
@@ -401,7 +401,7 @@ public class Map {
     }
 
     /**
-     *
+     *demande la destination (NSEW) a l'utilisateur
      * @return retourn la salle choisie par l'utilisateur
      */
     public Room moveCharacter(){
@@ -465,6 +465,10 @@ public class Map {
         return true;
     }
     
+    /**
+     * execute tout les fonction utile lors de la rentrer dans une nouvelle salle
+     * @param r la nouvelle salle dans lequel le joueur va rentrer
+     */
     public void enterNewRoom(Room r){
         hero.setRoom(r);
         System.out.println(r.toString());
@@ -472,6 +476,11 @@ public class Map {
         hero.inventaire();        
     }
     
+    /**
+     * permet a l'utilisateur de prendre un talisement dans une salle
+     * @param t le numero du talisement que l'utilisateur va prendre dans la salle
+     * @return retourne si l'action a bien etait effectuer
+     */
     public boolean takeTalismans(int t){
         if(t<0 || t>hero.getRoom().getTalismans().size()){
             hero.getTalisman().add(hero.getRoom().getTalismans().get(t));
@@ -481,6 +490,12 @@ public class Map {
             return false;
         }
     }
+
+    /**
+     * permet a l'utilisateur de deposer un talisement dans une salle
+     * @param t le numero du talisement que l'utilisateur va deposer dans la salle
+     * @return retourne si l'action a bien etait effectuer
+     */
     public boolean putTalismans(int t){
         if(t<0 || t>hero.getTalisman().size()){
             hero.getRoom().getTalismans().add(hero.getTalisman().get(t));
@@ -492,10 +507,10 @@ public class Map {
     }
     
     /**
-     *
+     * demande a l'utilisateur cfe qui veux faire en fonction de ses possibilites et l'oblige a donner un choix possible
      * @return choix de l'utilisateur pour la suite de ses actions
      */
-    public char choiceChar(){
+    private char choiceChar(){
         while(true){
             System.out.println("Vous pouvez:");
             if(hero.getRoom().getTalismans().size()>0){
@@ -514,17 +529,21 @@ public class Map {
             String choise = sc.next();
             choise = choise.toUpperCase();
             char choiseLetter = choise.charAt(0);
-            if(choiseLetter=='P' || choiseLetter=='J' || choiseLetter=='V' || choiseLetter=='U' || choiseLetter=='D'){
+            if(choiseLetter=='P' && hero.getRoom().getTalismans().size()>0 ||
+                choiseLetter=='J' && hero.getTalisman()!=null || 
+                choiseLetter=='V' || 
+                choiseLetter=='U' && hero.getRoom().getTalismansLock()!=null || 
+                choiseLetter=='D'){
                 return choiseLetter;
             }
         }
     }
     
     /**
-     *  la fonction execute l'action en fonction de se qui est demander en entrer
-     * @param c le choix de l'utilisateur
+     *  la fonction execute l'action en fonction de se qui est demander en entrer 
+     * @param c le choix de l'utilisateur (PJVUD)
      */
-    public void choix(char c){
+    private void choix(char c){
         Scanner sc = new Scanner(System.in);
         
         if(c == 'P'){
@@ -556,6 +575,9 @@ public class Map {
         }
     }
     
+    /**
+     *fusionne la fonction Choix et choiceChar qui fonctionne de paire
+     */
     public void quefaire(){
         choix(choiceChar());
     }
