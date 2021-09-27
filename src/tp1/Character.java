@@ -58,7 +58,7 @@ public class Character {
     public char moveWhere(){
         Scanner sc = new Scanner(System.in);
         while(true){
-            System.out.println("Quel est votre prochaine destination? (N/S/E/W) ");
+            System.out.println("Quel est votre prochaine destination? ("+room.getEntrances()+")");
             String nextRoom = sc.next();
             nextRoom = nextRoom.toUpperCase();
             char nextPorte = nextRoom.charAt(0);
@@ -68,6 +68,9 @@ public class Character {
         }
     }
     
+    /**
+     * affiche l'inventaire de l'utilisateur
+     */
     public void inventaire(){
         String inv = "Votre inventaire :\n";
         if(talisman!=null){
@@ -80,6 +83,10 @@ public class Character {
         System.out.println(inv);
     }
     
+    /**
+     *
+     * @return retourne la liste de talisement de l'utilisateur numeroté dans le but d'en deposer un
+     */
     public String getTalismansToString(){
         String description = "";
         int i=0;
