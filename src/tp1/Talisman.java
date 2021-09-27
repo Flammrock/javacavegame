@@ -9,22 +9,18 @@ package tp1;
  *
  * @author User
  */
-public class Talisman {
+public class Talisman implements Copiable {
     
-    protected Room room;
     protected String name;
+    protected String originRoomName;
     
-    public Talisman(/*Room room,*/ String name) {
-        //this.room = room;
+    public Talisman(String roomName, String name) {
+        this.originRoomName = roomName;
         this.name = name;
     }
-
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
+    
+    public Talisman(String name) {
+        this("",name);
     }
 
     public String getName() {
@@ -33,6 +29,21 @@ public class Talisman {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getOriginRoomName() {
+        return originRoomName;
+    }
+
+    public void setOriginRoomName(String originRoomName) {
+        this.originRoomName = originRoomName;
+    }
+    
+    
+    
+    @Override
+    public Copiable copy() {
+        return new Talisman(this.originRoomName,this.name);
     }
     
     

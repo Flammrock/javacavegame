@@ -7,6 +7,7 @@ package tp1;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -23,92 +24,127 @@ public class Map {
     }
     
     public static class Builder {
-    
-        ArrayList<Room> rooms;
         
-        ArrayList<ArrayList<String>> unResolvedTalismans;
         
-        Character hero;
-        int width;
-        int height;
+        // contains all rooms added to this builder
+        private ArrayList<Room> rooms;
         
-        // true if width and height are defined
-        boolean mapsize;
+        // contains all talismans added to this builder
+        private ArrayList<Talisman> talismans;
         
-        void updateMapSize() {
-            this.mapsize = this.width > 0 && this.height > 0;
+        // contains the hero
+        private Character hero;
+        
+        // map size
+        private int width;
+        private int height;
+        
+        private boolean isMapSizeValid() {
+            return this.width > 0 && this.height > 0;
         }
         
         Builder() {
             this.rooms = new ArrayList<>();
-            this.unResolvedTalismans = new ArrayList<>();
+            this.talismans = new ArrayList<>();
             this.hero = null;
             this.width = 0;
             this.height = 0;
-            this.mapsize = false;
         }
         
-        Map build() {
+        Map build() throws Map.ParseException {
+            
+            // before build, we solve all the informations together
+            this.solve();
+            
             return new Map(this.rooms,this.hero,this.width,this.height);
         }
         
         Builder setWidth(int width) throws Map.ParseException {
-            if (mapsize) throw new Map.ParseException("Map size already defined");
+            if (this.isMapSizeValid()) throw new Map.ParseException("Map size already defined");
             this.width = width;
-            this.updateMapSize();
             return this;
         }
         Builder setHeight(int height) throws Map.ParseException {
-            if (mapsize) throw new Map.ParseException("Map size already defined");
+            if (this.isMapSizeValid()) throw new Map.ParseException("Map size already defined");
             this.height = height;
-            this.updateMapSize();
             return this;
         }
         
+        /**
+        * This method try to extract all rooms from a Stream Object
+        * 
+        * Syntax of the stream :
+        * !3,3
+        * # 0,0
+        * Room name 1,SE,true
+        * # 1,0
+        * Room name 2,SEW,false
+        * ...
+        * 
+        * @param stream the stream
+        */
         Builder roomsFromStream(Stream stream) throws Map.ParseException {
             
             try {
+                
+                // build a parser
                 Parser p = new Parser(stream);
                 
+                // variable which contains the number of built rooms
                 int buildedrooms = 0;
-
+                
+                // while we can get rooms
                 while (true) {
+                    
+                    // get the next token
                     Token token = p.getNextToken();
 
-                    // if token is "!"
+                    // if token is "!"  (try to extract map size)
                     if (token.getData().equals("!")) {
-                        if (this.mapsize) throw new Map.ParseException("Map size already defined");
+                        if (this.isMapSizeValid()) throw new Map.ParseException("Map size already defined");
                         try {
                             this.width = Integer.parseInt(p.getNextToken().getData());
                             this.height = Integer.parseInt(p.getNextToken().getData());
                         } catch (Exception e) {
                             throw new Map.ParseException(e.getMessage());
                         }
-                        this.updateMapSize();
-                        this.mapsize = true;
                         System.out.println("Map Size : width="+this.width+", height="+this.height);
                         continue;
                     }
 
-                    // if comment '#' and mapsize not defined then ignore
-                    if (!this.mapsize && token.getData().charAt(0)=='#') continue;
+                    // if comment '#' and map size not defined then ignore
+                    if (!this.isMapSizeValid() && token.getData().charAt(0)=='#') continue;
 
                     // else, map size must be defined
-                    if (!this.mapsize) throw new Map.ParseException("Map size must be defined at first");
+                    if (!this.isMapSizeValid()) throw new Map.ParseException("Map size must be defined at first");
 
                     List<Room> builedrooms = this.buildRoomFromParser(buildedrooms,p);
                     buildedrooms+=builedrooms.size();
 
                     this.rooms.addAll(builedrooms);
-
+                    
+                    // according to the size of the map, we check if we have build all the rooms
                     if (buildedrooms >= this.width*this.height) return this;
+                    
+                    // else continue to build rooms
                 }
+                
             } catch (Exception e) {
                 throw new Map.ParseException(e.getMessage());
             }
             
         }
     
+        /**
+        * This method try to extract all talismans from a Stream Object
+        * 
+        * Syntax of the stream (line which start with '#' are comments):
+        * Room name 1, Talisman 1
+        * Room name 2, Talisman 2
+        * ...
+        * 
+        * @param stream the stream
+        */
         Builder talismansFromStream(Stream stream) throws Map.ParseException {
             try {
                 Parser p = new Parser(stream);
@@ -118,10 +154,7 @@ public class Map {
                     String roomName = p.getNextToken().getData();
                     String talismanName = p.getNextToken().getData();
                     System.out.println("load Talisman : "+roomName+" - "+talismanName);
-                    ArrayList<String> unresolvedtalisman = new ArrayList<>();
-                    unresolvedtalisman.add(roomName);
-                    unresolvedtalisman.add(talismanName);
-                    this.unResolvedTalismans.add(unresolvedtalisman);
+                    this.talismans.add(new Talisman(roomName,talismanName));
                     p.skipComments();
                 }
                 return this;
@@ -130,7 +163,14 @@ public class Map {
             }
         }
         
-        List<Room> buildRoomFromParser(int totalbuiledrooms, Parser p) throws Map.ParseException {
+        /**
+        * This method try to build rooms from a Parser Object
+        * 
+        * @param totalbuiledrooms the number of rooms already built, this information can be use to compute positions of rooms
+        * @param p the parser which contains the stream, with this parser we can get the next token easly
+        * @return return the list of rooms extracted from the parser
+        */
+        private List<Room> buildRoomFromParser(int totalbuiledrooms, Parser p) throws Map.ParseException {
             // ignore useless comment '#'
             
             try {
@@ -190,6 +230,66 @@ public class Map {
             }
         }
 
+        /**
+        * This method build a Hashmap<ArrayList<Room>> from an ArrayList<Room> by using the name's room as key
+        * 
+        * @param roomslist
+        * @return return the hashmap
+        */
+        private HashMap<String,ArrayList<Room>> roomstoHashmap(ArrayList<Room> roomslist) {
+            HashMap<String,ArrayList<Room>> hashmap = new HashMap<>();
+            
+            // fill hashmap with room
+            for (Room r : roomslist) {
+                
+                String key = r.getName();
+                
+                // if two room have same name, send a warning
+                if (hashmap.containsKey(key)) {
+                    System.out.println("[Warning] Two rooms have the name ["+key+"]");
+                    
+                }
+                
+                // if no key, create the array first
+                else {
+                    hashmap.put(key, new ArrayList<>());
+                }
+                
+                // then add
+                hashmap.get(key).add(r);
+            }
+            
+            return hashmap;
+        }
+        
+        /**
+        * This method try to insert all Talismans in Rooms
+        */
+        private void solve() throws Map.ParseException {
+            
+            // use intermediate hash map (to find room in O(1))
+            HashMap<String,ArrayList<Room>> hashmap = this.roomstoHashmap(this.rooms);
+            
+            // try to put all the talismans in rooms
+            for (Talisman t : this.talismans) {
+                
+                // get the name of the room
+                String key = t.getOriginRoomName();
+                
+                // try to find the room
+                if (!hashmap.containsKey(key)) {
+                    System.out.println("[Warning] unable to find the room ["+key+"] for the talisman ["+t.getName()+"]");
+                    continue;
+                }
+                
+                // if we found the room, we add the talisman
+                ArrayList<Room> roomslist = hashmap.get(key);
+                for (Room r : roomslist) {
+                    r.addTalisman((Talisman)t.copy()); // a copy of the talisman to avoid issues
+                }
+                
+            }
+        }
     }
     
     protected Character hero;
@@ -243,6 +343,11 @@ public class Map {
         this.height = height;
     }
     
+    /**
+     *
+     * @param x
+     * @param y
+     */
     public void descriptionAlentoure(int x,int y){
         Room actualRoom = rooms.get(x+y*width);
         String Entrances = actualRoom.getEntrances();

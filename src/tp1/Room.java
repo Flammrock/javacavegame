@@ -58,6 +58,11 @@ public class Room {
     }
     
     
+    public void addTalisman(Talisman t) {
+        this.talismans.add(t);
+    }
+    
+    
 
     public int getX() {
         return x;
