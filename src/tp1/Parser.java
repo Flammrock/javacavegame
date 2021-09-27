@@ -88,7 +88,10 @@ public class Parser {
         if (!this.hasNextToken()) return;
         while (true) {
             char c = this.stream.peek();
-            if (c=='#') this.getUntilMeetChar('\n');
+            if (c=='#') {
+                this.getUntilMeetChar('\n');
+                continue;
+            }
             return;
         }
     }
