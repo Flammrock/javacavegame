@@ -44,7 +44,7 @@ public class TP1 {
         // on créé une map vide
         try {
             Map m =  new Map.Builder()
-                    .roomsFromStream(new Stream(TP1.class.getResourceAsStream("Rooms.dat")))
+                    .roomsFromStream(new Stream(TP1.class.getResourceAsStream("Rooms2.dat")))
                     .build();
 
             // on créé le héro et on le met dans la 1ère salle de la liste
