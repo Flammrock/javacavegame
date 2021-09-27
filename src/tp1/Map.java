@@ -272,9 +272,27 @@ public class Map {
                 System.out.print("La porte de l'(O)uest mene a :");
                 System.out.println(rooms.get(x-1+width*y).getName());
                 i++;
+                continue;
             }
+            System.out.println("Vous avez trouvez la sortie!!!!\nElle est au "+googleTrad(Entrances.charAt(i)));
+            i++;
         }
         System.out.println("\n");
+    }
+    
+    private String googleTrad(char t){
+        switch(t){
+            case('N'):
+                return "Nord";
+            case('S'):
+                return "Sud";
+            case('E'):
+                return "Est";
+            case('W'):
+                return "Ouest";
+            default:
+                return "Ha bah non...";
+        }
     }
 
     /**
@@ -321,7 +339,7 @@ public class Map {
                 }
             break;
             case('W'):
-                if(isRoomAvailable(actualRoom%width+1,actualRoom/width)){
+                if(isRoomAvailable(actualRoom%width-1,actualRoom/width)){
                     nextRoomIs = actualRoom - 1;
                 }else{
                     System.err.println("Erreur, position incorrecte");
