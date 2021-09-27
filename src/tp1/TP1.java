@@ -59,7 +59,7 @@ public class TP1 {
             m.quefaire();
             
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace(System.out);
         }
         
         

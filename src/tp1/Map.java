@@ -117,6 +117,7 @@ public class Map {
                     p.skipComments();
                     String roomName = p.getNextToken().getData();
                     String talismanName = p.getNextToken().getData();
+                    System.out.println("load Talisman : "+roomName+" - "+talismanName);
                     ArrayList<String> unresolvedtalisman = new ArrayList<>();
                     unresolvedtalisman.add(roomName);
                     unresolvedtalisman.add(talismanName);
