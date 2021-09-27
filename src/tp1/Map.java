@@ -295,11 +295,11 @@ public class Map {
             if(hero.getRoom().getTalismans().size()>0){
                 System.out.println("Prendre un talismant dans la salle (P)");
             }
-            if(hero.getTalisman().size()>0){
+            if(hero.getTalisman()!=null){
                 System.out.println("Jeter un talismant dans la salle (J)");
             }
             System.out.println("Voir votre inventaire (V)");
-            if(hero.getRoom().getTalismansLock().size()>0){
+            if(hero.getRoom().getTalismansLock()!=null){
                 System.out.println("Utiliser un talismant sur un monstre (U)");
             }
             System.out.println("Deplacer votre hero dans une autre salle (D)");
