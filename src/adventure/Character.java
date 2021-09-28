@@ -78,7 +78,7 @@ public class Character extends Item {
      * affiche l'inventaire de l'utilisateur
      */
     public void inventaire(){
-        String inv = "Votre inventaire :\n";
+        String inv = "[Votre inventaire]:\n";
         if(talisman!=null){
             for(Talisman t:talisman){
                 inv += "-"+t.getName()+"\n";

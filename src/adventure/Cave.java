@@ -532,7 +532,7 @@ public class Cave {
     public void descriptionAlentoure(int x,int y){
         Room actualRoom = rooms.get(x+y*width);
         String Entrances = actualRoom.getEntrances();
-        System.out.println("Description alentoure:");
+        System.out.println("[Description alentoure]:");
         int i = 0;
         while(i!=Entrances.length()){
             
@@ -681,7 +681,8 @@ public class Cave {
      * @return choix de l'utilisateur pour la suite de ses actions
      */
     private void displayInstructions(Room r){
-        System.out.println("Vous pouvez:");
+        System.out.println("");
+        System.out.println("[Vous pouvez]:");
         if(r.getTalismans().size()>0){
             System.out.println("Prendre un talismant dans la salle (T)");
         }
@@ -694,6 +695,7 @@ public class Cave {
             System.out.println("Utiliser un talismant sur un monstre (U)");
         }
         System.out.println("Deplacer votre hero dans une autre salle (M)");
+        System.out.println("");
 
         /*Parser p = new Parser(new Stream(System.in));
         p.setCharSeparator(' ');
