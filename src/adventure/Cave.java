@@ -645,11 +645,18 @@ public class Cave {
             if(!hero.getRoom().getCharacters().isEmpty())
             for(Character c:hero.getRoom().getCharacters()){
                 if(!c.getTalisman().isEmpty())
-                for(Talisman t:c.getTalisman()){
-                    if(hero.getTalisman().contains(t)){
-                        hero.removeTalisman(t);
-                    }else{
-                        hero.setMort(true);                       
+                for(Talisman tm:c.getTalisman()){
+                    if(!hero.getTalisman().isEmpty())
+                    for(Talisman th:hero.getTalisman()){
+                        if(th.getName().equals(tm.getName())){
+                            hero.removeTalisman(th);
+                            System.out.println("Vous affrontez un monstre!!!");
+                            System.out.println("Vous avez le talisman "+th.getName()+" qui est le point faible de se monstre que vous connessiez grace a votre connaissance infini");
+                            System.out.println("Le talisman :" + th.getName() + " a ete detruit pandant le combat..");
+                            break;
+                        }else{
+                            hero.setMort(true);                       
+                        }
                     }
                 }
             }
