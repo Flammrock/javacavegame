@@ -48,7 +48,7 @@ public class Room extends Item {
         this.talismans.add(t);
     }
     
-    public void removeTalisman(int t){
+    public void removeTalisman(Talisman t){
         this.talismans.remove(t);
     }
 

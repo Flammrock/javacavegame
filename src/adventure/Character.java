@@ -42,6 +42,10 @@ public class Character extends Item {
     public void addTalisman(Talisman talisman){
         this.talisman.add(talisman);
     }
+    public void removeTalisman(Talisman talisman){
+        this.talisman.remove(talisman);
+    }
+            
 
     /**
      *
