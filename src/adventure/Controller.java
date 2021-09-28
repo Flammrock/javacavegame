@@ -14,21 +14,34 @@ import java.util.List;
  */
 public class Controller {
     
+    // contains the tokens extracted by the parser
     private List<Token> tokens;
+    
+    // the parser
     private Parser parser;
 
     public Controller() {
         this.tokens = new ArrayList<>();
-        this.parser = new Parser(new Stream(System.in));
+        this.parser = new Parser(new Stream(System.in)); // connect the System.in to the parser
         this.parser.setCharSeparator(' ');
     }
     
+    /**
+     * This method add new tokens to the tokens list if the tokens list is empty
+     */
     private void populate() {
         if (this.tokens.isEmpty()) {
+            
+            // retrieve all the tokens extracted by the parser and add these tokens to the list
             this.tokens.addAll(this.parser.getNextObject());
+            
         }
     }
     
+    /**
+     * This method consume a token and return the data of the consumed token
+     * @return
+     */
     public String getInput() {
         this.populate();
         if (this.tokens.isEmpty()) return "";
@@ -36,7 +49,10 @@ public class Controller {
         return input;
     }
     
-    
+    /**
+     * This method return all extracted token (and merge the token together)
+     * @return
+     */
     public String getData() {
         this.populate();
         String result = "";
@@ -52,6 +68,9 @@ public class Controller {
         return result;
     }
     
+    /**
+     * This method clear the tokens
+     */
     public void abort() {
         this.tokens.clear();
     }

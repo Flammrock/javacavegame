@@ -76,11 +76,16 @@ public class Cave {
             while (!hero.isMort()) {
                 // process the input
                 m.processInput();
-                
-                //m.quefaire();
-                
+
+                if (m.heroWin()) break;
             }
-            System.out.println("Game Over");
+            
+            if (hero.isMort()) {
+                System.out.println("Game Over");
+            } else {
+                System.out.println("Vous avez gagné");
+            }
+            
         } catch (Exception e) {
             System.err.println(e);
             LOGGER.log(Level.SEVERE, "an exception was thrown", e);
@@ -401,18 +406,15 @@ public class Cave {
     private int width;
     private int height;
     
-    private Cave() {
-        this.rooms = new ArrayList<>();
-        this.hero = null;
-        this.width = 0;
-        this.height = 0;
-    }
+    private Room winRoom;
+    
 
     private Cave(List<Room> rooms, Player hero, int width, int height) {
         this.rooms = rooms;
         this.hero = hero;
         this.width = width;
         this.height = height;
+        this.winRoom = new Room(-1,-1,"WinRoom","",false);
     }
     
     public List<Room> getRooms() {
@@ -577,44 +579,32 @@ public class Cave {
                 return "Ha bah non...";
         }
     }
-
+  
     /**
      *demande la destination (NSEW) a l'utilisateur
      * @return retourn la salle choisie par l'utilisateur
      */
     public Room moveCharacter(char r){
         int actualRoom = hero.getRoom().getX()+hero.getRoom().getY()*width;
-        int nextRoomIs;
+        int nextRoomIs = -1;
         switch(r){
             case('N'):
                 if(isRoomAvailable(actualRoom%width,actualRoom/width-1)){
-                    nextRoomIs = actualRoom - width;
-                }else{
-                    System.err.println("Vous vous en etes sortie!!!!!!!!!!");
                     nextRoomIs = actualRoom - width;
                 }
             break;
             case('S'):
                 if(isRoomAvailable(actualRoom%width,actualRoom/width+1)){
                     nextRoomIs = actualRoom + width;
-                }else{
-                    System.err.println("Vous vous en etes sortie!!!!!!!!!!");
-                    nextRoomIs = actualRoom + width;
                 }
             break;
             case('E'):
                 if(isRoomAvailable(actualRoom%width+1,actualRoom/width)){
                     nextRoomIs = actualRoom + 1;
-                }else{
-                    System.err.println("Vous vous en etes sortie!!!!!!!!!!");
-                    nextRoomIs = actualRoom + 1;
                 }
             break;
             case('W'):
                 if(isRoomAvailable(actualRoom%width-1,actualRoom/width)){
-                    nextRoomIs = actualRoom - 1;
-                }else{
-                    System.err.println("Vous vous en etes sortie!!!!!!!!!!");
                     nextRoomIs = actualRoom - 1;
                 }
             break;
@@ -622,7 +612,11 @@ public class Cave {
                 System.err.println("Mauvaise entrer position salle");
                 return null;
         }
-        return rooms.get(nextRoomIs);
+        if (nextRoomIs==-1) {
+            return this.winRoom;
+        } else {
+            return rooms.get(nextRoomIs);
+        }
     }
     private boolean isRoomAvailable(int x,int y){
         if(x<0 || y<0 || x>width-1 || y>height-1){
@@ -631,11 +625,19 @@ public class Cave {
         return true;
     }
     
+    public boolean heroWin() {
+        return this.hero.getRoom()==this.winRoom;
+    }
+    
     /**
      * execute tout les fonction utile lors de la rentrer dans une nouvelle salle
      * @param r la nouvelle salle dans lequel le joueur va rentrer
      */
     public void enterNewRoom(Room r){
+        if (r==this.winRoom) {
+            hero.setRoom(r);
+            return;
+        }
         if(r!=null){
             hero.setRoom(r);
             System.out.println(r.toString());
@@ -678,9 +680,9 @@ public class Cave {
      * @param t le numero du talisement que l'utilisateur va deposer dans la salle
      */
     public void putTalismans(Talisman t){
-            hero.getRoom().getTalismans().add(t);
-            hero.removeTalisman(t);
-        }
+        hero.getRoom().getTalismans().add(t);
+        hero.removeTalisman(t);
+    }
     
     /**
      * demande a l'utilisateur cfe qui veux faire en fonction de ses possibilites et l'oblige a donner un choix possible
@@ -702,85 +704,9 @@ public class Cave {
         }
         System.out.println("Deplacer votre hero dans une autre salle (M)");
         System.out.println("");
-
-        /*Parser p = new Parser(new Stream(System.in));
-        p.setCharSeparator(' ');
-        p.setAcceptEmptyToken(false);
-
-        List<Token> tokens = p.getNextObject();
-        ArrayList<String> answer = new ArrayList();
-        int i=0;
-        for (Token t : tokens) {
-            if(i<=0){
-                answer.add(t.getData().toUpperCase());
-                //System.out.println(t);
-            }else if(i<=1){
-                answer.add(t.getData());
-            }else{
-                answer.set(1,answer.get(1)+" "+t.getData());
-            }
-            //System.out.println(answer);
-            i++;
-        }
-        return answer;*/
-        /*Scanner sc = new Scanner(System.in);
-        String choise = sc.next();*/
-
-        /*char choiseLetter = choise.charAt(0);
-        if(choiseLetter=='P' && hero.getRoom().getTalismans().size()>0 ||
-            choiseLetter=='J' && hero.getTalisman()!=null || 
-            choiseLetter=='V' || 
-            choiseLetter=='U' && hero.getRoom().getTalismansLock()!=null || 
-            choiseLetter=='D'){
-            return choiseLetter;
-        }*/
     }
     
-    /**
-     *  la fonction execute l'action en fonction de se qui est demander en entrer 
-     * @param c le choix de l'utilisateur (PJVUD)
-     */
-    private void choix(ArrayList<String> c){
-        if(!c.isEmpty()){
-            if(c.get(0).charAt(0) == 'T' && c.size()==2){  //Prend un talisment
-                //System.out.println("Quelle talisment prenez vous?");
-                for(Talisman t : hero.getRoom().getTalismans()){
-                    if(c.get(1).equals(t.getName())){
-                        takeTalismans(t);
-                        System.out.println("Talismans pris");
-                        break;
-                    }
-                }
-            }
-            if(c.get(0).charAt(0) == 'P' && c.size()==2){  //Poser un talisment
-                //System.out.println("Quelle talisement jetez vous?");
-                for(Talisman t : hero.getRoom().getTalismans()){
-                    if(c.get(1).equals(t.getName())){
-                        putTalismans(t);
-                        System.out.println("Talismans depose");
-                    }
-                }
 
-            }
-            if(c.get(0).charAt(0) == 'I'){  //Voir l'inventaire
-                hero.inventaire();
-            }
-            if(c.get(0).charAt(0) == 'D'){  //Voir les alentours
-                descriptionAlentoure(hero.getRoom().getX(),hero.getRoom().getY());
-                System.out.println(hero.getRoom().getTalismansToString());
-            }
-            if(c.get(0).charAt(0) == 'M' && c.size()==2){  //Choisir un porte
-                //System.out.println("Quelle porte prenez vous?");
-                //descriptionAlentoure(hero.getRoom().getX(),hero.getRoom().getY());
-                if(c.get(1).length()>1){
-                    enterNewRoom(findRoom(c.get(1)));   //si le nom de la salle est donné en entrer
-                }else if(c.get(1).length()==1){
-                    enterNewRoom(moveCharacter((c.get(1).charAt(0))));  //si la position NSEW est donné en entrer
-                }
-            }
-        }
-    }
-    
     private Room findRoom(String get) {
         ArrayList<Room> roomValide = new ArrayList();
         for(int i=0;i<hero.getRoom().getEntrances().length();i++){
