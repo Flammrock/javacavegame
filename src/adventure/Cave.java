@@ -619,9 +619,18 @@ public class Cave {
             
             List<Token> tokens = p.getNextObject();
             ArrayList<String> answer = new ArrayList();
+            int i=0;
             for (Token t : tokens) {
-                answer.add(t.getData().toUpperCase());
-                System.out.println(t);
+                if(i<=0){
+                    answer.add(t.getData().toUpperCase());
+                    //System.out.println(t);
+                }else if(i<=1){
+                    answer.add(t.getData());
+                }else{
+                    answer.set(1,answer.get(1)+" "+t.getData());
+                }
+                System.out.println(answer);
+                i++;
             }
             return answer;
             /*Scanner sc = new Scanner(System.in);
@@ -682,7 +691,27 @@ public class Cave {
     }
     
     private Room findRoom(String get) {
-        for(Room r:rooms){
+        ArrayList<Room> roomValide = new ArrayList();
+        for(int i=0;i<hero.getRoom().getEntrances().length();i++){
+            switch(hero.getRoom().getEntrances().charAt(i)){
+                case('N'):
+                    roomValide.add(rooms.get(hero.getRoom().getX()+(hero.getRoom().getY()-1)*width));
+                break;
+                case('S'):
+                    roomValide.add(rooms.get(hero.getRoom().getX()+(hero.getRoom().getY()+1)*width));
+                break;
+                case('E'):
+                    roomValide.add(rooms.get(hero.getRoom().getX()+1+hero.getRoom().getY()*width));
+                break;
+                case('W'):
+                    roomValide.add(rooms.get(hero.getRoom().getX()-1+hero.getRoom().getY()*width));
+                break;
+                default:
+                    System.err.println("Mauvaise entrer position salle");
+                break;
+            }
+        }
+        for(Room r:roomValide){
             if(get.equals(r.getName())){
                 return r;
             }
