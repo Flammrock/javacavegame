@@ -47,7 +47,7 @@ public class Cave {
      */
     public static void main(String[] args) {
         
-        // on créé une map vide
+        // on créé une cave
         try {
             Cave m =  new Cave.Builder()
                     .loadRoomsFromStream(new Stream(Cave.class.getResourceAsStream("Rooms2.dat")))
