@@ -22,6 +22,8 @@ public class Room extends Item {
     
     public Room(int x, int y, String name, String entrances, boolean isStart) {
         super(name);
+        this.x = x;
+        this.y = y;
         this.entrances = entrances;
         this.talismans = new ArrayList<>();
         this.isStart = isStart;
@@ -101,11 +103,11 @@ public class Room extends Item {
      * @return retourn la liste de talisment dans la salle
      */
     public String getTalismansToString(){
-        String description = "";
+        String description = "Talismans :\n";
         int i=0;
         if(talismans != null){
             for(Talisman t:talismans){
-                description += "(" +i+ ")"+t.getName()+"\n";
+                description += "- "+t.getName()+"\n";
                 i++;
             }
         }
