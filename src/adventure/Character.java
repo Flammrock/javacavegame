@@ -17,6 +17,7 @@ public class Character extends Item {
     
     private Room room;
     private List<Talisman> talisman;
+    private boolean mort = false;
 
     public Character(String name, Room room, List<Talisman> talismans) {
         super(name);
@@ -44,6 +45,14 @@ public class Character extends Item {
     }
     public void removeTalisman(Talisman talisman){
         this.talisman.remove(talisman);
+    }
+
+    public boolean isMort() {
+        return mort;
+    }
+
+    public void setMort(boolean mort) {
+        this.mort = mort;
     }
             
 
