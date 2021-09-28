@@ -450,75 +450,73 @@ public class Cave {
     
     
     public void processInput() {
-        while (true) {
-            
-            this.displayInstructions(this.hero.getRoom());
-            
-            String input = this.hero.getInput();
-            
-            // take a talisman
-            if (input.equals("T")) {
-                
-                String data = this.hero.getInput();
-                //System.out.println("Vous voulez prendre le talisman : " + data);
-                
-                // try to take the talisman
-                for(Talisman t : hero.getRoom().getTalismans()){
-                    if(data.equals(t.getName())){
-                        takeTalismans(t);
-                        System.out.println("Talismans pris");
-                        break;
-                    }
+
+        this.displayInstructions(this.hero.getRoom());
+
+        String input = this.hero.getInput();
+
+        // take a talisman
+        if (input.equals("T")) {
+
+            String data = this.hero.getInput();
+            //System.out.println("Vous voulez prendre le talisman : " + data);
+
+            // try to take the talisman
+            for(Talisman t : hero.getRoom().getTalismans()){
+                if(data.equals(t.getName())){
+                    takeTalismans(t);
+                    System.out.println("Talismans pris");
+                    break;
                 }
-            
-            // else go to another room
-            } else if (input.equals("M")) {
-                
-                String data = this.hero.getInput();
-                //System.out.println("Vous voulez aller : " + data);
-                
-                //si la position NSEW est donné en entrer
-                if (data.length()==1) {
-                    this.enterNewRoom(this.moveCharacter(data.charAt(0)));
-                    continue;
-                    
-                //si le nom de la salle est donné en entrer
-                } else {
-                    Room room = findRoom(data);
-                    if (room!=null) {
-                        this.enterNewRoom(room);
-                        continue;
-                    }
-                }
-            
-            // else throw a talisman
-            } else if (input.equals("P")) {
-            
-                String data = this.hero.getInput();
-                
-                for(Talisman t : hero.getRoom().getTalismans()){
-                    if(data.equals(t.getName())){
-                        putTalismans(t);
-                        System.out.println("Talismans depose");
-                    }
-                }
-                
-            // else see inventory
-            } else if (input.equals("I")) {
-                
-                hero.inventaire();
-            
-            // else see informations about the room
-            } else if (input.equals("D")) {
-                
-                descriptionAlentoure(hero.getRoom().getX(),hero.getRoom().getY());
-                System.out.println(hero.getRoom().getTalismansToString());
-                
             }
-            
-            // reset input
-            this.hero.abortInput();
+
+        // else go to another room
+        } else if (input.equals("M")) {
+
+            String data = this.hero.getInput();
+            //System.out.println("Vous voulez aller : " + data);
+
+            //si la position NSEW est donné en entrer
+            if (data.length()==1) {
+                this.enterNewRoom(this.moveCharacter(data.charAt(0)));
+                //continue;
+
+            //si le nom de la salle est donné en entrer
+            } else {
+                Room room = findRoom(data);
+                if (room!=null) {
+                    this.enterNewRoom(room);
+                    //continue;
+                }
+            }
+
+        // else throw a talisman
+        } else if (input.equals("P")) {
+
+            String data = this.hero.getInput();
+
+            for(Talisman t : hero.getRoom().getTalismans()){
+                if(data.equals(t.getName())){
+                    putTalismans(t);
+                    System.out.println("Talismans depose");
+                }
+            }
+
+        // else see inventory
+        } else if (input.equals("I")) {
+
+            hero.inventaire();
+
+        // else see informations about the room
+        } else if (input.equals("D")) {
+
+            descriptionAlentoure(hero.getRoom().getX(),hero.getRoom().getY());
+            System.out.println(hero.getRoom().getTalismansToString());
+
         }
+
+        // reset input
+        this.hero.abortInput();
     }
     
     
