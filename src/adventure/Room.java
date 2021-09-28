@@ -18,6 +18,7 @@ public class Room extends Item {
     private String entrances;
     private ArrayList<Talisman> talismans;
     private ArrayList<Talisman> talismansLock;
+    private ArrayList<Character> characters;
     private boolean isStart;
     
     public Room(int x, int y, String name, String entrances, boolean isStart) {
@@ -27,6 +28,7 @@ public class Room extends Item {
         this.entrances = entrances;
         this.talismans = new ArrayList<>();
         this.isStart = isStart;
+        this.characters = new ArrayList<>();
     }
 
     public ArrayList<Talisman> getTalismans() {
@@ -112,5 +114,9 @@ public class Room extends Item {
             }
         }
         return description;
+    }
+
+    public void addCharacter(Character character) {
+        this.characters.add(character);
     }
 }

@@ -387,7 +387,9 @@ public class Cave {
                     talismanscharacter = new ArrayList<>(hashmaptalisman.get(talismanName));
                 }
                 
-                Character character = new Character(name,hashmap.get(key).get(0),talismanscharacter);
+                Room room = hashmap.get(key).get(0);
+                Character character = new Character(name,room,talismanscharacter);
+                room.addCharacter(character);
                 LOGGER.log(Level.INFO, "[Character] Room={0}, Name={1}, Talismans={2}", new Object[]{hashmap.get(key).get(0).getName(), name, talismanscharacter.size()});
                 this.characters.add(character);
             }
