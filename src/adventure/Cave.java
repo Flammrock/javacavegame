@@ -74,14 +74,14 @@ public class Cave {
             // on fait entrer le héro dans la salle
             m.enterNewRoom(m.getRooms().get(0));
             
-            while (true) {
+            while (hero.isMort()) {
                 // process the input
                 m.processInput();
                 
                 //m.quefaire();
                 
             }
-            
+            System.out.printf("Game Over");
         } catch (Exception e) {
             System.err.println(e);
             LOGGER.log(Level.SEVERE, "an exception was thrown", e);
@@ -601,6 +601,9 @@ public class Cave {
             System.out.println(r.toString());
             descriptionAlentoure(r.getX(),r.getY());
             hero.inventaire();
+            if(true){
+                hero.setMort(true);
+            }
         }
     }
     
@@ -706,9 +709,6 @@ public class Cave {
             if(c.get(0).charAt(0) == 'D'){  //Voir les alentours
                 descriptionAlentoure(hero.getRoom().getX(),hero.getRoom().getY());
                 System.out.println(hero.getRoom().getTalismansToString());
-            }
-            if(c.get(0).charAt(0) == 'U'){  //Battre un monstre
-                //TODO
             }
             if(c.get(0).charAt(0) == 'M' && c.size()==2){  //Choisir un porte
                 //System.out.println("Quelle porte prenez vous?");
