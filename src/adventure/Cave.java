@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tp1;
+package adventure;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -20,7 +20,36 @@ import java.util.logging.SimpleFormatter;
  *
  * @author User
  */
-public class Map {
+public class Cave {
+    
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        
+        // on créé une map vide
+        try {
+            Cave m =  new Cave.Builder()
+                    .loadRoomsFromStream(new Stream(Cave.class.getResourceAsStream("Rooms2.dat")))
+                    .loadTalismansFromStream(new Stream(Cave.class.getResourceAsStream("Talismans.dat")))
+                    .loadCharactersFromStream(new Stream(Cave.class.getResourceAsStream("Characters.dat")))
+                    .build();
+
+            // on créé le héro et on le met dans la 1ère salle de la liste
+            /*Character Hero = new Character(m.getRooms().get(0),"Hero",null);
+
+            // on ajoute le héro dans la map
+            m.setHero(Hero);
+
+            // on fait entrer le héro dans la salle
+            m.enterNewRoom(m.getRooms().get(0));
+            m.quefaire();*/
+            
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        }
+    }
     
     public static class ParseException extends Exception {
         public ParseException(String message) {
@@ -63,7 +92,7 @@ public class Map {
         private Character hero;
         
         private interface Callback {
-            void call(List<Token> tokens) throws Map.ParseException;
+            void call(List<Token> tokens) throws Cave.ParseException;
         }
         
         // map size
@@ -84,28 +113,28 @@ public class Map {
             this.characters = new ArrayList<>();
         }
         
-        Map build() throws Map.ParseException {
+        Cave build() throws Cave.ParseException {
             
             // before build, we solve all the informations together
             this.solve();
             
-            return new Map(this.rooms,this.hero,this.width,this.height);
+            return new Cave(this.rooms,this.hero,this.width,this.height);
         }
         
-        Builder setWidth(int width) throws Map.ParseException {
-            if (this.isMapSizeValid()) throw new Map.ParseException("Map size already defined");
+        Builder setWidth(int width) throws Cave.ParseException {
+            if (this.isMapSizeValid()) throw new Cave.ParseException("Map size already defined");
             this.width = width;
             LOGGER.log(Level.INFO, "Width = {0}", width);
             return this;
         }
-        Builder setHeight(int height) throws Map.ParseException {
-            if (this.isMapSizeValid()) throw new Map.ParseException("Map size already defined");
+        Builder setHeight(int height) throws Cave.ParseException {
+            if (this.isMapSizeValid()) throw new Cave.ParseException("Map size already defined");
             this.height = height;
             return this;
         }
         
         
-        Builder loadRoomsFromStream(Stream stream) throws Map.ParseException {
+        Builder loadRoomsFromStream(Stream stream) throws Cave.ParseException {
             
             LOGGER.log(Level.INFO, "Load Room from a stream");
             
@@ -125,7 +154,7 @@ public class Map {
             // extract all rooms
             while (true) {
                 tokens = p.getNextObject(); // get the next object
-                if (tokens.size() < 3) throw new Map.ParseException("data is missing when loading room");
+                if (tokens.size() < 3) throw new Cave.ParseException("data is missing when loading room");
                 
                 // build the room
                 String roomName = tokens.get(0).getData();
@@ -149,11 +178,11 @@ public class Map {
             return this;
         }
         
-        Builder loadTalismansFromStream(Stream stream) throws Map.ParseException {
+        Builder loadTalismansFromStream(Stream stream) throws Cave.ParseException {
             this.loadObjectFromStream(stream, (List<Token> tokens) -> {
                 
                 // chech if enough data
-                if (tokens.size() < 2) throw new Map.ParseException("data is missing when loading talisman");
+                if (tokens.size() < 2) throw new Cave.ParseException("data is missing when loading talisman");
                 
                 // extract data
                 String roomName = tokens.get(0).getData();
@@ -171,11 +200,11 @@ public class Map {
             return this;
         }
         
-        Builder loadCharactersFromStream(Stream stream) throws Map.ParseException {
+        Builder loadCharactersFromStream(Stream stream) throws Cave.ParseException {
             this.loadObjectFromStream(stream, (List<Token> tokens) -> {
                 
                 // check if enough data
-                if (tokens.size() < 3) throw new Map.ParseException("data is missing when loading character");
+                if (tokens.size() < 3) throw new Cave.ParseException("data is missing when loading character");
                 
                 this.unsolvedCharacters.add(tokens);
                 
@@ -185,7 +214,7 @@ public class Map {
         
         
         
-        private Builder loadObjectFromStream(Stream stream, Callback callback) throws Map.ParseException {
+        private Builder loadObjectFromStream(Stream stream, Callback callback) throws Cave.ParseException {
             // create a parser over the stream
             Parser p = new Parser(stream);
             
@@ -204,11 +233,11 @@ public class Map {
             return this;
         }
         
-        private void extractMapSize(List<Token> tokens) throws Map.ParseException {
+        private void extractMapSize(List<Token> tokens) throws Cave.ParseException {
             
             // check if there are enough data
             if (tokens == null || tokens.size() < 3) {
-                throw new Map.ParseException("unable to extract width and height");
+                throw new Cave.ParseException("unable to extract width and height");
             }
 
             // first token must be "!" (to specify the size)
@@ -217,7 +246,7 @@ public class Map {
                     this.width = Integer.parseInt(tokens.get(1).getData());
                     this.height = Integer.parseInt(tokens.get(2).getData());
                 } catch (Exception e) {
-                    throw new Map.ParseException(e); // chain exception to preserve log trace
+                    throw new Cave.ParseException(e); // chain exception to preserve log trace
                 }
             }
             
@@ -257,7 +286,7 @@ public class Map {
         /**
         * This method try to insert all Talismans in Rooms
         */
-        private void solve() throws Map.ParseException {
+        private void solve() throws Cave.ParseException {
             
             // use intermediate hash map (to find room in O(1))
             HashMap<String,List<Room>> hashmap = this.<Room>listToHashmap(this.rooms);
@@ -317,14 +346,14 @@ public class Map {
     protected int width;
     protected int height;
     
-    protected Map() {
+    protected Cave() {
         this.rooms = new ArrayList<>();
         this.hero = null;
         this.width = 0;
         this.height = 0;
     }
 
-    protected Map(List<Room> rooms, Character hero, int width, int height) {
+    protected Cave(List<Room> rooms, Character hero, int width, int height) {
         this.rooms = rooms;
         this.hero = hero;
         this.width = width;
