@@ -657,6 +657,8 @@ public class Cave {
                             hero.setMort(true);                       
                         }
                     }
+                c.removeTalisman(tm);
+                break;
                 }
             }
         }
