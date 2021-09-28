@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import java.util.logging.Handler;
 
 /**
  *
@@ -28,6 +29,9 @@ public class Cave {
     // configure the logger
     static {
         System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [%4$-7s] {%2$s} %5$s%6$s%n");
+        
+        LOGGER.setUseParentHandlers(false);
+        
         try {
             FileHandler fileHandler = new FileHandler("game.log");
             fileHandler.setFormatter(new SimpleFormatter());
@@ -79,6 +83,9 @@ public class Cave {
         }
     }
     
+    /**
+     * A ParseException is thrown when data is missing when parsing
+     */
     public static class ParseException extends Exception {
         public ParseException(String message) {
             super(message);
@@ -102,12 +109,17 @@ public class Cave {
         // contains all talismans added to this builder
         private List<Talisman> talismans;
         
-        // contains unsolved characters
+        /**
+         * contains unsolved characters
+         * (when we extract "# Room name, Character, Talisman" from file, we need then to
+         * associate the room name and the talisman name to actual object (Room Object and Talisman Object))
+         */
         private List<List<Token>> unsolvedCharacters;
         
         // contains the hero
         private Character hero;
         
+        // a callback for the method loadObjectFromStream (see below)
         private interface Callback {
             void call(List<Token> tokens) throws Cave.ParseException;
         }
@@ -116,7 +128,7 @@ public class Cave {
         private int width;
         private int height;
         
-        private boolean isMapSizeValid() {
+        private boolean isCaveSizeValid() {
             return this.width > 0 && this.height > 0;
         }
         
@@ -139,13 +151,13 @@ public class Cave {
         }
         
         Builder setWidth(int width) throws Cave.ParseException {
-            if (this.isMapSizeValid()) throw new Cave.ParseException("Map size already defined");
+            if (this.isCaveSizeValid()) throw new Cave.ParseException("Cave size already defined");
             this.width = width;
             LOGGER.log(Level.INFO, "Width = {0}", width);
             return this;
         }
         Builder setHeight(int height) throws Cave.ParseException {
-            if (this.isMapSizeValid()) throw new Cave.ParseException("Map size already defined");
+            if (this.isCaveSizeValid()) throw new Cave.ParseException("Cave size already defined");
             this.height = height;
             LOGGER.log(Level.INFO, "Height = {0}", height);
             return this;
@@ -163,15 +175,17 @@ public class Cave {
             Parser p = new Parser(stream);
             List<Token> tokens = p.getNextObject(); // get the next object
             
-            // if map size not set or invalid, try to extract it
-            if (!this.isMapSizeValid()) {
-                this.extractMapSize(tokens);
-                LOGGER.log(Level.INFO, "[MapSize] Width = {0}, Height = {1}", new Object[]{this.width, this.height});
+            // if cave size not set or invalid, try to extract it
+            if (!this.isCaveSizeValid()) {
+                this.extractCaveSize(tokens); // if fail, a ParseException is thrown
+                LOGGER.log(Level.INFO, "[CaveSize] Width = {0}, Height = {1}", new Object[]{this.width, this.height});
             }
             
             // extract all rooms
             while (true) {
                 tokens = p.getNextObject(); // get the next object
+                
+                // we need at least 3 tokens : the room name, the directions and a token that tell if the room is the start room
                 if (tokens.size() < 3) throw new Cave.ParseException("data is missing when loading room");
                 
                 // build the room
@@ -199,7 +213,7 @@ public class Cave {
         Builder loadTalismansFromStream(Stream stream) throws Cave.ParseException {
             this.loadObjectFromStream(stream, (List<Token> tokens) -> {
                 
-                // chech if enough data
+                // check if enough data
                 if (tokens.size() < 2) throw new Cave.ParseException("data is missing when loading talisman");
                 
                 // extract data
@@ -224,19 +238,26 @@ public class Cave {
                 // check if enough data
                 if (tokens.size() < 3) throw new Cave.ParseException("data is missing when loading character");
                 
-                this.unsolvedCharacters.add(tokens);
+                this.unsolvedCharacters.add(tokens); // with solve the data of characters in the solve() method
                 
             });
             return this;
         }
         
         
-        
+        /**
+         * This method extract from the stream each list of tokens (which represent an object) and pass this list to the callback
+         * 
+         * @param stream
+         * @param callback this callback is call for every list of tokens found in the stream
+         * @return
+         * @throws adventure.Cave.ParseException 
+         */
         private Builder loadObjectFromStream(Stream stream, Callback callback) throws Cave.ParseException {
             // create a parser over the stream
             Parser p = new Parser(stream);
             
-            // extract all talismans
+            // extract all "objects"
             while (true) {
                 List<Token> tokens = p.getNextObject(); // get the next object
                 
@@ -251,7 +272,13 @@ public class Cave {
             return this;
         }
         
-        private void extractMapSize(List<Token> tokens) throws Cave.ParseException {
+        /**
+         * This method check if the list of tokens passed in arguments represent an "objet" that set the map size
+         * 
+         * @param tokens
+         * @throws adventure.Cave.ParseException throws an exception if the tokens dont represent an "objet" that set the cave size
+         */
+        private void extractCaveSize(List<Token> tokens) throws Cave.ParseException {
             
             // check if there are enough data
             if (tokens == null || tokens.size() < 3) {
@@ -266,7 +293,10 @@ public class Cave {
                 } catch (Exception e) {
                     throw new Cave.ParseException(e); // chain exception to preserve log trace
                 }
+                return;
             }
+            
+            throw new Cave.ParseException("unable to extract width and height");
             
         }
 
@@ -359,19 +389,19 @@ public class Cave {
         }
     }
     
-    protected Character hero;
-    protected List<Room> rooms;
-    protected int width;
-    protected int height;
+    private Character hero;
+    private List<Room> rooms;
+    private int width;
+    private int height;
     
-    protected Cave() {
+    private Cave() {
         this.rooms = new ArrayList<>();
         this.hero = null;
         this.width = 0;
         this.height = 0;
     }
 
-    protected Cave(List<Room> rooms, Character hero, int width, int height) {
+    private Cave(List<Room> rooms, Character hero, int width, int height) {
         this.rooms = rooms;
         this.hero = hero;
         this.width = width;
