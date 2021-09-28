@@ -590,7 +590,7 @@ public class Cave {
                 if(isRoomAvailable(actualRoom%width,actualRoom/width-1)){
                     nextRoomIs = actualRoom - width;
                 }else{
-                    System.err.println("Vous vous en etes sortie");
+                    System.err.println("Vous vous en etes sortie!!!!!!!!!!");
                     nextRoomIs = actualRoom - width;
                 }
             break;
@@ -598,7 +598,7 @@ public class Cave {
                 if(isRoomAvailable(actualRoom%width,actualRoom/width+1)){
                     nextRoomIs = actualRoom + width;
                 }else{
-                    System.err.println("Vous vous en etes sortie");
+                    System.err.println("Vous vous en etes sortie!!!!!!!!!!");
                     nextRoomIs = actualRoom + width;
                 }
             break;
@@ -606,7 +606,7 @@ public class Cave {
                 if(isRoomAvailable(actualRoom%width+1,actualRoom/width)){
                     nextRoomIs = actualRoom + 1;
                 }else{
-                    System.err.println("Vous vous en etes sortie");
+                    System.err.println("Vous vous en etes sortie!!!!!!!!!!");
                     nextRoomIs = actualRoom + 1;
                 }
             break;
@@ -614,7 +614,7 @@ public class Cave {
                 if(isRoomAvailable(actualRoom%width-1,actualRoom/width)){
                     nextRoomIs = actualRoom - 1;
                 }else{
-                    System.err.println("Vous vous en etes sortie");
+                    System.err.println("Vous vous en etes sortie!!!!!!!!!!");
                     nextRoomIs = actualRoom - 1;
                 }
             break;
