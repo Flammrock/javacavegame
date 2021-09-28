@@ -652,41 +652,42 @@ public class Cave {
      * @param c le choix de l'utilisateur (PJVUD)
      */
     private void choix(ArrayList<String> c){
-        
-        if(c.get(0).charAt(0) == 'P' && c.size()==2){  //Prend un talisment
-            //System.out.println("Quelle talisment prenez vous?");
-            for(Talisman t : hero.getRoom().getTalismans()){
-                if(c.get(1).equals(t.getName())){
-                    takeTalismans(t);
-                    System.out.println("Talismans pris");
+        if(!c.isEmpty()){
+            if(c.get(0).charAt(0) == 'P' && c.size()==2){  //Prend un talisment
+                //System.out.println("Quelle talisment prenez vous?");
+                for(Talisman t : hero.getRoom().getTalismans()){
+                    if(c.get(1).equals(t.getName())){
+                        takeTalismans(t);
+                        System.out.println("Talismans pris");
+                    }
                 }
             }
-        }
-        if(c.get(0).charAt(0) == 'J' && c.size()==2){  //Poser un talisment
-            //System.out.println("Quelle talisement jetez vous?");
-            for(Talisman t : hero.getRoom().getTalismans()){
-                if(c.get(1).equals(t.getName())){
-                    putTalismans(t);
-                    System.out.println("Talismans depose");
+            if(c.get(0).charAt(0) == 'J' && c.size()==2){  //Poser un talisment
+                //System.out.println("Quelle talisement jetez vous?");
+                for(Talisman t : hero.getRoom().getTalismans()){
+                    if(c.get(1).equals(t.getName())){
+                        putTalismans(t);
+                        System.out.println("Talismans depose");
+                    }
                 }
+
             }
-            
-        }
-        if(c.get(0).charAt(0) == 'V'){  //Voir l'inventaire
-            hero.inventaire();
-        }
-        if(c.get(0).charAt(0) == 'R'){  //Voir les alentours
-            descriptionAlentoure(hero.getRoom().getX(),hero.getRoom().getY());
-            System.out.println(hero.getTalismansToString());
-        }
-        if(c.get(0).charAt(0) == 'U'){  //Battre un monstre
-            //TODO
-        }
-        if(c.get(0).charAt(0) == 'D' && c.size()==2){  //Choisir un porte
-            //System.out.println("Quelle porte prenez vous?");
-            //descriptionAlentoure(hero.getRoom().getX(),hero.getRoom().getY());
-            
-            enterNewRoom(findRoom(c.get(1)));
+            if(c.get(0).charAt(0) == 'V'){  //Voir l'inventaire
+                hero.inventaire();
+            }
+            if(c.get(0).charAt(0) == 'R'){  //Voir les alentours
+                descriptionAlentoure(hero.getRoom().getX(),hero.getRoom().getY());
+                System.out.println(hero.getTalismansToString());
+            }
+            if(c.get(0).charAt(0) == 'U'){  //Battre un monstre
+                //TODO
+            }
+            if(c.get(0).charAt(0) == 'D' && c.size()==2){  //Choisir un porte
+                //System.out.println("Quelle porte prenez vous?");
+                //descriptionAlentoure(hero.getRoom().getX(),hero.getRoom().getY());
+
+                enterNewRoom(findRoom(c.get(1)));
+            }
         }
     }
     
