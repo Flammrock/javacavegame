@@ -28,12 +28,17 @@ public class Map {
     
     public static class Builder {
         
-        
         // contains all rooms added to this builder
-        private ArrayList<Room> rooms;
+        private List<Room> rooms;
+        
+        // contains all characters added to this builder
+        private List<Character> characters;
         
         // contains all talismans added to this builder
-        private ArrayList<Talisman> talismans;
+        private List<Talisman> talismans;
+        
+        // contains unsolved characters
+        private List<List<Token>> unsolvedCharacters;
         
         // contains the hero
         private Character hero;
@@ -56,6 +61,7 @@ public class Map {
             this.hero = null;
             this.width = 0;
             this.height = 0;
+            this.unsolvedCharacters = new ArrayList<>();
         }
         
         Map build() throws Map.ParseException {
@@ -131,7 +137,7 @@ public class Map {
                 String talismanName = tokens.get(1).getData();
                 
                 // build talisman
-                Talisman talisman = new Talisman(roomName,talismanName);
+                Talisman talisman = new Talisman(talismanName,roomName);
                 
                 System.out.println("[Talisman] Room="+roomName+", Name="+talismanName); // log
                 
@@ -145,24 +151,15 @@ public class Map {
         Builder loadCharacterFromStream(Stream stream) throws Map.ParseException {
             this.loadObjectFromStream(stream, (List<Token> tokens) -> {
                 
-                // chech if enough data
+                // check if enough data
                 if (tokens.size() < 3) throw new Map.ParseException("data is missing when loading character");
                 
-                // extract data
-                String roomName = tokens.get(0).getData();
-                String characterName = tokens.get(1).getData();
-                String talismanName = tokens.get(2).getData();
+                this.unsolvedCharacters.add(tokens);
                 
-                List<Talisman> talismans = new ArrayList<>();
-                talismans.add()
-                
-                // build character
-                Character character = new Character(roomName,characterName,talismanName);
-                
-                System.out.println("[Talisman] Room="+talismanRoomName+", Name="+talismanName); // log
+                //System.out.println("[Talisman] Room="+talismanRoomName+", Name="+talismanName); // log
                 
                 // add talisman
-                this.talismans.add(talisman);
+                //this.talismans.add(talisman);
                 
             });
             return this;
@@ -209,22 +206,22 @@ public class Map {
         }
 
         /**
-        * This method build a Hashmap<ArrayList<Room>> from an ArrayList<Room> by using the name's room as key
+        * This method build a Hashmap<List<T>> from an List<T> by using the name's item as key
         * 
         * @param roomslist
         * @return return the hashmap
         */
-        private HashMap<String,ArrayList<Room>> roomstoHashmap(ArrayList<Room> roomslist) {
-            HashMap<String,ArrayList<Room>> hashmap = new HashMap<>();
+        private <T extends Item> HashMap<String,List<T>> listToHashmap(List<T> list) {
+            HashMap<String,List<T>> hashmap = new HashMap<>();
             
-            // fill hashmap with room
-            for (Room r : roomslist) {
+            // fill hashmap with item
+            for (T r : list) {
                 
                 String key = r.getName();
                 
-                // if two room have same name, send a warning
+                // if two items have same name, send a warning
                 if (hashmap.containsKey(key)) {
-                    System.out.println("[Warning] Two rooms have the name ["+key+"]");
+                    System.out.println("[Warning] Two items have the name ["+key+"]");
                     
                 }
                 
@@ -246,7 +243,8 @@ public class Map {
         private void solve() throws Map.ParseException {
             
             // use intermediate hash map (to find room in O(1))
-            HashMap<String,ArrayList<Room>> hashmap = this.roomstoHashmap(this.rooms);
+            HashMap<String,List<Room>> hashmap = this.<Room>listToHashmap(this.rooms);
+            HashMap<String,List<Talisman>> hashmaptalisman = this.<Talisman>listToHashmap(this.talismans);
             
             // try to put all the talismans in rooms
             for (Talisman t : this.talismans) {
@@ -261,17 +259,43 @@ public class Map {
                 }
                 
                 // if we found the room, we add the talisman
-                ArrayList<Room> roomslist = hashmap.get(key);
+                List<Room> roomslist = hashmap.get(key);
                 for (Room r : roomslist) {
                     r.addTalisman((Talisman)t.copy()); // a copy of the talisman to avoid issues
                 }
                 
             }
+            
+            // try to solve characters data
+            for (List<Token> tokens : this.unsolvedCharacters) {
+                
+                String key = tokens.get(0).getData(); // get the name of the room
+                String name = tokens.get(1).getData(); // name of the character
+                String talismanName = tokens.get(2).getData(); // name of the talisman
+                List<Talisman> talismanscharacter = new ArrayList<>();
+                
+                // try to find the room
+                if (!hashmap.containsKey(key)) {
+                    System.out.println("[Warning] unable to find the room ["+key+"] for the character ["+name+"]");
+                    continue;
+                }
+                
+                // try to find the talisman
+                if (!hashmaptalisman.containsKey(talismanName)) {
+                    System.out.println("[Warning] unable to find the talisman ["+talismanName+"] for the character ["+name+"]");
+                } else {
+                    talismanscharacter = new ArrayList<>(hashmaptalisman.get(talismanName));
+                }
+                
+                Character character = new Character(name,hashmap.get(key).get(0),talismanscharacter);
+                this.characters.add(character);
+            }
+            
         }
     }
     
     protected Character hero;
-    protected ArrayList<Room> rooms;
+    protected List<Room> rooms;
     protected int width;
     protected int height;
     
@@ -282,14 +306,14 @@ public class Map {
         this.height = 0;
     }
 
-    protected Map(ArrayList<Room> rooms, Character hero, int width, int height) {
+    protected Map(List<Room> rooms, Character hero, int width, int height) {
         this.rooms = rooms;
         this.hero = hero;
         this.width = width;
         this.height = height;
     }
     
-    public ArrayList<Room> getRooms() {
+    public List<Room> getRooms() {
         return rooms;
     }
 
