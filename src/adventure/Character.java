@@ -85,11 +85,11 @@ public class Character extends Item {
      * @return retourne la liste de talisement de l'utilisateur numeroté dans le but d'en deposer un
      */
     public String getTalismansToString(){
-        String description = "";
+        String description = "Talismens:\n";
         int i=0;
         if(talisman != null){
             for(Talisman t:talisman){
-                description += "(" +i+ ")"+t.getName()+"\n";
+                description += "- "+t.getName()+"\n";
                 i++;
             }
         }
