@@ -452,12 +452,12 @@ public class Cave {
 
         this.displayInstructions(this.hero.getRoom());
 
-        String input = this.hero.getInput();
-
+        String input = this.hero.getInput().trim();
+        
         // take a talisman
         if (input.equals("T")) {
 
-            String data = this.hero.getInput();
+            String data = this.hero.getInput().trim();
             //System.out.println("Vous voulez prendre le talisman : " + data);
 
             // try to take the talisman
@@ -472,9 +472,9 @@ public class Cave {
         // else go to another room
         } else if (input.equals("M")) {
 
-            String data = this.hero.getInput();
+            String data = this.hero.getInput().trim();
             //System.out.println("Vous voulez aller : " + data);
-
+            
             //si la position NSEW est donné en entrer
             if (data.length()==1) {
                 this.enterNewRoom(this.moveCharacter(data.charAt(0)));
@@ -492,7 +492,7 @@ public class Cave {
         // else throw a talisman
         } else if (input.equals("P")) {
 
-            String data = this.hero.getInput();
+            String data = this.hero.getInput().trim();
 
             for(Talisman t : hero.getRoom().getTalismans()){
                 if(data.equals(t.getName())){
