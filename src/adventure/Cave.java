@@ -74,14 +74,14 @@ public class Cave {
             // on fait entrer le héro dans la salle
             m.enterNewRoom(m.getRooms().get(0));
             
-            while (hero.isMort()) {
+            while (!hero.isMort()) {
                 // process the input
                 m.processInput();
                 
                 //m.quefaire();
                 
             }
-            System.out.printf("Game Over");
+            System.out.println("Game Over");
         } catch (Exception e) {
             System.err.println(e);
             LOGGER.log(Level.SEVERE, "an exception was thrown", e);
@@ -644,8 +644,16 @@ public class Cave {
             System.out.println(r.toString());
             descriptionAlentoure(r.getX(),r.getY());
             hero.inventaire();
-            if(true){
-                hero.setMort(true);
+            if(!hero.getRoom().getCharacters().isEmpty())
+            for(Character c:hero.getRoom().getCharacters()){
+                if(!c.getTalisman().isEmpty())
+                for(Talisman t:c.getTalisman()){
+                    if(hero.getTalisman().contains(t)){
+                        hero.removeTalisman(t);
+                    }else{
+                        hero.setMort(true);                       
+                    }
+                }
             }
         }
     }
