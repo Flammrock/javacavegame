@@ -55,21 +55,6 @@ public class Cave {
                     .loadCharactersFromStream(new Stream(Cave.class.getResourceAsStream("Characters.dat")))
                     .build();
 
-            Player player = new Player("lol", null, null);
-            
-            while (true) {
-                String input = player.getInput();
-                if (input.equals("T")) {
-                    String data = player.getInput();
-                    System.out.println("Vous voulez prendre le talisman : "+data);
-                } else if (input.equals("M")) {
-                    String data = player.getInput();
-                    System.out.println("Vous voulez aller : "+data);
-                } else {
-                    player.abortInput();
-                }
-            }
-            
             
             /*Parser p = new Parser(new Stream(System.in));
             p.setCharSeparator(' ');
@@ -81,7 +66,7 @@ public class Cave {
             }*/
             
             // on créé le héro et on le met dans la 1ère salle de la liste
-            /*Player hero = new Player("Hero",m.getRooms().get(0),null);
+            Player hero = new Player("Hero",m.getRooms().get(0),null);
 
             // on ajoute le héro dans la map
             m.setHero(hero);
@@ -90,16 +75,12 @@ public class Cave {
             m.enterNewRoom(m.getRooms().get(0));
             
             while (true) {
-                
-                // we get the input of the player
-                String input = hero.getInput();
-                
                 // process the input
-                m.processInput(input);
+                m.processInput();
                 
                 //m.quefaire();
                 
-            }*/
+            }
             
         } catch (Exception e) {
             System.err.println(e);
@@ -466,8 +447,33 @@ public class Cave {
     }
     
     
-    public boolean processInput(String input) {
-        return true;
+    public void processInput() {
+        while (true) {
+            String input = this.hero.getInput();
+            
+            // take a talisman
+            if (input.equals("T")) {
+                
+                String data = this.hero.getInput();
+                System.out.println("Vous voulez prendre le talisman : " + data);
+                
+                // try to take the talisman
+                // this.taketalisman()
+            
+            // else go to another room
+            } else if (input.equals("M")) {
+                
+                String data = this.hero.getInput();
+                System.out.println("Vous voulez aller : " + data);
+                
+                // try to go to the direction {data}
+                // this.move(data)
+            
+            // else the input is bad, reset the input of player
+            } else {
+                this.hero.abortInput();
+            }
+        }
     }
     
     
