@@ -626,54 +626,52 @@ public class Cave {
      * demande a l'utilisateur cfe qui veux faire en fonction de ses possibilites et l'oblige a donner un choix possible
      * @return choix de l'utilisateur pour la suite de ses actions
      */
-    private ArrayList<String> choiceChar(){
-        while(true){
-            System.out.println("Vous pouvez:");
-            if(hero.getRoom().getTalismans().size()>0){
-                System.out.println("Prendre un talismant dans la salle (T)");
-            }
-            if(hero.getTalisman()!=null && hero.getTalisman().size()>0){
-                System.out.println("Jeter un talismant dans la salle (P)");
-            }
-            System.out.println("Voir votre inventaire (I)");
-            System.out.println("Voir les alentours (D)");
-            if(hero.getRoom().getTalismansLock()!=null && hero.getRoom().getTalismansLock().size()>0){
-                System.out.println("Utiliser un talismant sur un monstre (U)");
-            }
-            System.out.println("Deplacer votre hero dans une autre salle (M)");
-
-            Parser p = new Parser(new Stream(System.in));
-            p.setCharSeparator(' ');
-            p.setAcceptEmptyToken(false);
-            
-            List<Token> tokens = p.getNextObject();
-            ArrayList<String> answer = new ArrayList();
-            int i=0;
-            for (Token t : tokens) {
-                if(i<=0){
-                    answer.add(t.getData().toUpperCase());
-                    //System.out.println(t);
-                }else if(i<=1){
-                    answer.add(t.getData());
-                }else{
-                    answer.set(1,answer.get(1)+" "+t.getData());
-                }
-                //System.out.println(answer);
-                i++;
-            }
-            return answer;
-            /*Scanner sc = new Scanner(System.in);
-            String choise = sc.next();*/
-            
-            /*char choiseLetter = choise.charAt(0);
-            if(choiseLetter=='P' && hero.getRoom().getTalismans().size()>0 ||
-                choiseLetter=='J' && hero.getTalisman()!=null || 
-                choiseLetter=='V' || 
-                choiseLetter=='U' && hero.getRoom().getTalismansLock()!=null || 
-                choiseLetter=='D'){
-                return choiseLetter;
-            }*/
+    private void displayChoiceTalisman(Room r){
+        System.out.println("Vous pouvez:");
+        if(r.getTalismans().size()>0){
+            System.out.println("Prendre un talismant dans la salle (T)");
         }
+        if(hero.getTalisman()!=null && hero.getTalisman().size()>0){
+            System.out.println("Jeter un talismant dans la salle (P)");
+        }
+        System.out.println("Voir votre inventaire (I)");
+        System.out.println("Voir les alentours (D)");
+        if(r.getTalismansLock()!=null && r.getTalismansLock().size()>0){
+            System.out.println("Utiliser un talismant sur un monstre (U)");
+        }
+        System.out.println("Deplacer votre hero dans une autre salle (M)");
+
+        /*Parser p = new Parser(new Stream(System.in));
+        p.setCharSeparator(' ');
+        p.setAcceptEmptyToken(false);
+
+        List<Token> tokens = p.getNextObject();
+        ArrayList<String> answer = new ArrayList();
+        int i=0;
+        for (Token t : tokens) {
+            if(i<=0){
+                answer.add(t.getData().toUpperCase());
+                //System.out.println(t);
+            }else if(i<=1){
+                answer.add(t.getData());
+            }else{
+                answer.set(1,answer.get(1)+" "+t.getData());
+            }
+            //System.out.println(answer);
+            i++;
+        }
+        return answer;*/
+        /*Scanner sc = new Scanner(System.in);
+        String choise = sc.next();*/
+
+        /*char choiseLetter = choise.charAt(0);
+        if(choiseLetter=='P' && hero.getRoom().getTalismans().size()>0 ||
+            choiseLetter=='J' && hero.getTalisman()!=null || 
+            choiseLetter=='V' || 
+            choiseLetter=='U' && hero.getRoom().getTalismansLock()!=null || 
+            choiseLetter=='D'){
+            return choiseLetter;
+        }*/
     }
     
     /**
@@ -751,12 +749,5 @@ public class Cave {
             }
         }
         return null;
-    }
-    
-    /**
-     *fusionne la fonction Choix et choiceChar qui fonctionne de paire
-     */
-    public void quefaire(){
-        choix(choiceChar());
     }
 }
