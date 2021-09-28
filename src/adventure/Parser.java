@@ -167,6 +167,11 @@ public class Parser {
         
     }
     
+    /**
+     * @deprecated
+     * This method try to extract all the available tokens in the stream
+     * @return the list of tokens extracted
+     */
     public List<Token> getTokenList() {
         List<Token> tokens = new ArrayList<>();
         while (this.hasNextToken()) {
@@ -190,27 +195,39 @@ public class Parser {
         List<Token> tokens = new ArrayList<>(); // first create the list
         
         // skip all comments
-        while (true) {
-            this.skipComments();
-            break;
-        }
-        int line = this.currentline;
-        while (line==this.currentline) {
+        this.skipComments();
+        
+        int line = this.currentline; // get line
+        
+        while (line==this.currentline) { // track if line change
+            
+            // if no tokens to extract, then we return the extracted tokens
             if (!this.hasNextToken()) return tokens;
+            
+            // if empty tokens are accepted
             if (this.isAcceptEmptyToken()) {
-                tokens.add(this.getNextToken());
+                tokens.add(this.getNextToken()); // then add the token without check
+                
+            // else, check if the token is empty or not
             } else {
                 Token token = this.getNextToken();
                 String data = token.getData();
-                if (!data.isEmpty()) tokens.add(token);
+                if (!data.isEmpty()) tokens.add(token); // if not empty, add the token
             }
+            
         }
+        
         return tokens;
     }
     
     
-    
-    private boolean ignoreLinesStartWith(char a) {
+    /**
+     * This method ignore line which start with a character (passed as argument)
+     * @param a the character
+     * @return true  => a line or lines are skip
+     *         false => nothing is skip
+     */
+    protected boolean ignoreLinesStartWith(char a) {
         if (!this.hasNextToken()) return false;
         boolean b = false;
         while (true) {
