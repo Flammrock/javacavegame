@@ -38,10 +38,14 @@ public class Controller {
     public String getData() {
         this.populate();
         String result = "";
-        for (Token t : this.tokens) {
-            result += t.getData() + " ";
+        for (int i = 0; i < this.tokens.size(); i++) {
+            Token t = this.tokens.get(i);
+            if (i==this.tokens.size()-1) {
+                result += t.getData();
+            } else {
+                result += t.getData() + " ";
+            }
         }
-        if (!result.isEmpty()) result = result.substring(0, result.length()-2);
         this.tokens.clear();
         return result;
     }
