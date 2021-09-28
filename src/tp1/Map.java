@@ -62,6 +62,7 @@ public class Map {
             this.width = 0;
             this.height = 0;
             this.unsolvedCharacters = new ArrayList<>();
+            this.characters = new ArrayList<>();
         }
         
         Map build() throws Map.ParseException {
@@ -96,7 +97,7 @@ public class Map {
             // if map size not set or invalid, try to extract it
             if (!this.isMapSizeValid()) {
                 this.extractMapSize(tokens);
-                System.out.println("[MapSize] Width = "+this.width+", Height = "+this.height);
+                System.err.println("[MapSize] Width = "+this.width+", Height = "+this.height);
             }
             
             // extract all rooms
@@ -112,7 +113,7 @@ public class Map {
                 
                 this.rooms.add(room); // add the room
                 
-                System.out.println("[Room] "+x+","+y+" : "+roomName+" - "+roomDirections+" - "+roomIsStart);
+                System.err.println("[Room] "+x+","+y+" : "+roomName+" - "+roomDirections+" - "+roomIsStart);
                 
                 // compute positions
                 x++;
@@ -126,7 +127,7 @@ public class Map {
             return this;
         }
         
-        Builder loadTalismanFromStream(Stream stream) throws Map.ParseException {
+        Builder loadTalismansFromStream(Stream stream) throws Map.ParseException {
             this.loadObjectFromStream(stream, (List<Token> tokens) -> {
                 
                 // chech if enough data
@@ -139,7 +140,7 @@ public class Map {
                 // build talisman
                 Talisman talisman = new Talisman(talismanName,roomName);
                 
-                System.out.println("[Talisman] Room="+roomName+", Name="+talismanName); // log
+                System.err.println("[Talisman] Room="+roomName+", Name="+talismanName); // log
                 
                 // add talisman
                 this.talismans.add(talisman);
@@ -148,18 +149,13 @@ public class Map {
             return this;
         }
         
-        Builder loadCharacterFromStream(Stream stream) throws Map.ParseException {
+        Builder loadCharactersFromStream(Stream stream) throws Map.ParseException {
             this.loadObjectFromStream(stream, (List<Token> tokens) -> {
                 
                 // check if enough data
                 if (tokens.size() < 3) throw new Map.ParseException("data is missing when loading character");
                 
                 this.unsolvedCharacters.add(tokens);
-                
-                //System.out.println("[Talisman] Room="+talismanRoomName+", Name="+talismanName); // log
-                
-                // add talisman
-                //this.talismans.add(talisman);
                 
             });
             return this;
@@ -208,7 +204,7 @@ public class Map {
         /**
         * This method build a Hashmap<List<T>> from an List<T> by using the name's item as key
         * 
-        * @param roomslist
+        * @param list
         * @return return the hashmap
         */
         private <T extends Item> HashMap<String,List<T>> listToHashmap(List<T> list) {
@@ -221,7 +217,7 @@ public class Map {
                 
                 // if two items have same name, send a warning
                 if (hashmap.containsKey(key)) {
-                    System.out.println("[Warning] Two items have the name ["+key+"]");
+                    System.err.println("[Warning] Two items have the name ["+key+"]");
                     
                 }
                 
@@ -254,7 +250,7 @@ public class Map {
                 
                 // try to find the room
                 if (!hashmap.containsKey(key)) {
-                    System.out.println("[Warning] unable to find the room ["+key+"] for the talisman ["+t.getName()+"]");
+                    System.err.println("[Warning] unable to find the room ["+key+"] for the talisman ["+t.getName()+"]");
                     continue;
                 }
                 
@@ -276,18 +272,19 @@ public class Map {
                 
                 // try to find the room
                 if (!hashmap.containsKey(key)) {
-                    System.out.println("[Warning] unable to find the room ["+key+"] for the character ["+name+"]");
+                    System.err.println("[Warning] unable to find the room ["+key+"] for the character ["+name+"]");
                     continue;
                 }
                 
                 // try to find the talisman
                 if (!hashmaptalisman.containsKey(talismanName)) {
-                    System.out.println("[Warning] unable to find the talisman ["+talismanName+"] for the character ["+name+"]");
+                    System.err.println("[Warning] unable to find the talisman ["+talismanName+"] for the character ["+name+"]");
                 } else {
                     talismanscharacter = new ArrayList<>(hashmaptalisman.get(talismanName));
                 }
                 
                 Character character = new Character(name,hashmap.get(key).get(0),talismanscharacter);
+                System.err.println("[Character] Room="+hashmap.get(key).get(0).getName()+", Name="+name+", Talismans="+talismanscharacter.size()); // log
                 this.characters.add(character);
             }
             
