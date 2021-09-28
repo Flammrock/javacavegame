@@ -22,6 +22,21 @@ import java.util.logging.SimpleFormatter;
  */
 public class Cave {
     
+    // get the logger
+    private static final Logger LOGGER = Logger.getLogger(Builder.class.getPackage().getName());
+
+    // configure the logger
+    static {
+        System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [%4$-7s] {%2$s} %5$s%6$s%n");
+        try {
+            FileHandler fileHandler = new FileHandler("game.log");
+            fileHandler.setFormatter(new SimpleFormatter());
+            LOGGER.addHandler(fileHandler);
+        } catch (Exception exception) {
+            LOGGER.log(Level.SEVERE, "Cannot read configuration file", exception);
+        }
+    }
+    
     
     /**
      * @param args the command line arguments
@@ -36,18 +51,31 @@ public class Cave {
                     .loadCharactersFromStream(new Stream(Cave.class.getResourceAsStream("Characters.dat")))
                     .build();
 
+            
+            /*Parser p = new Parser(new Stream(System.in));
+            p.setCharSeparator(' ');
+            p.setAcceptEmptyToken(false);
+            
+            List<Token> tokens = p.getNextObject();
+            for (Token t : tokens) {
+                System.out.println(t);
+            }*/
+            
             // on créé le héro et on le met dans la 1ère salle de la liste
-            /*Character Hero = new Character(m.getRooms().get(0),"Hero",null);
+            Character Hero = new Character("Hero",m.getRooms().get(0),null);
 
             // on ajoute le héro dans la map
             m.setHero(Hero);
 
             // on fait entrer le héro dans la salle
             m.enterNewRoom(m.getRooms().get(0));
-            m.quefaire();*/
+            
+            while (true) {
+                m.quefaire();
+            }
             
         } catch (Exception e) {
-            e.printStackTrace(System.out);
+            LOGGER.log(Level.SEVERE, "an exception was thrown", e);
         }
     }
     
@@ -60,21 +88,10 @@ public class Cave {
         }
     }
     
+    /**
+     * Builder for the Cave class
+     */
     public static class Builder {
-        
-        // get the logger
-        private static final Logger LOGGER = Logger.getLogger(Builder.class.getPackage().getName());
-        
-        // configure the logger
-        static {
-            try {
-                FileHandler fileHandler = new FileHandler("game.log");
-                fileHandler.setFormatter(new SimpleFormatter());
-                LOGGER.addHandler(fileHandler);
-            } catch(Exception exception) {
-                LOGGER.log(Level.SEVERE, "Cannot read configuration file", exception);
-            }
-        }
         
         // contains all rooms added to this builder
         private List<Room> rooms;
@@ -130,6 +147,7 @@ public class Cave {
         Builder setHeight(int height) throws Cave.ParseException {
             if (this.isMapSizeValid()) throw new Cave.ParseException("Map size already defined");
             this.height = height;
+            LOGGER.log(Level.INFO, "Height = {0}", height);
             return this;
         }
         
@@ -148,7 +166,7 @@ public class Cave {
             // if map size not set or invalid, try to extract it
             if (!this.isMapSizeValid()) {
                 this.extractMapSize(tokens);
-                System.err.println("[MapSize] Width = "+this.width+", Height = "+this.height);
+                LOGGER.log(Level.INFO, "[MapSize] Width = {0}, Height = {1}", new Object[]{this.width, this.height});
             }
             
             // extract all rooms
@@ -164,7 +182,7 @@ public class Cave {
                 
                 this.rooms.add(room); // add the room
                 
-                System.err.println("[Room] "+x+","+y+" : "+roomName+" - "+roomDirections+" - "+roomIsStart);
+                LOGGER.log(Level.INFO, "[Room] {0},{1} : {2} - {3} - {4}", new Object[]{x, y, roomName, roomDirections, roomIsStart});
                 
                 // compute positions
                 x++;
@@ -191,7 +209,7 @@ public class Cave {
                 // build talisman
                 Talisman talisman = new Talisman(talismanName,roomName);
                 
-                System.err.println("[Talisman] Room="+roomName+", Name="+talismanName); // log
+                LOGGER.log(Level.INFO, "[Talisman] Room={0}, Name={1}", new Object[]{roomName, talismanName});
                 
                 // add talisman
                 this.talismans.add(talisman);
@@ -268,7 +286,7 @@ public class Cave {
                 
                 // if two items have same name, send a warning
                 if (hashmap.containsKey(key)) {
-                    System.err.println("[Warning] Two items have the name ["+key+"]");
+                    LOGGER.log(Level.WARNING, "[Warning] Two items have the name [{0}]", key);
                 }
                 
                 // if no key, create the array first
@@ -300,7 +318,7 @@ public class Cave {
                 
                 // try to find the room
                 if (!hashmap.containsKey(key)) {
-                    System.err.println("[Warning] unable to find the room ["+key+"] for the talisman ["+t.getName()+"]");
+                    LOGGER.log(Level.WARNING, "[Warning] unable to find the room [{0}] for the talisman [{1}]", new Object[]{key, t.getName()});
                     continue;
                 }
                 
@@ -322,19 +340,19 @@ public class Cave {
                 
                 // try to find the room
                 if (!hashmap.containsKey(key)) {
-                    System.err.println("[Warning] unable to find the room ["+key+"] for the character ["+name+"]");
+                    LOGGER.log(Level.WARNING, "[Warning] unable to find the room [{0}] for the character [{1}]", new Object[]{key, name});
                     continue;
                 }
                 
                 // try to find the talisman
                 if (!hashmaptalisman.containsKey(talismanName)) {
-                    System.err.println("[Warning] unable to find the talisman ["+talismanName+"] for the character ["+name+"]");
+                    LOGGER.log(Level.WARNING, "[Warning] unable to find the talisman [{0}] for the character [{1}]", new Object[]{talismanName, name});
                 } else {
                     talismanscharacter = new ArrayList<>(hashmaptalisman.get(talismanName));
                 }
                 
                 Character character = new Character(name,hashmap.get(key).get(0),talismanscharacter);
-                System.err.println("[Character] Room="+hashmap.get(key).get(0).getName()+", Name="+name+", Talismans="+talismanscharacter.size()); // log
+                LOGGER.log(Level.INFO, "[Character] Room={0}, Name={1}, Talismans={2}", new Object[]{hashmap.get(key).get(0).getName(), name, talismanscharacter.size()});
                 this.characters.add(character);
             }
             
@@ -531,9 +549,9 @@ public class Cave {
      * @return retourne si l'action a bien etait effectuer
      */
     public boolean takeTalismans(int t){
-        if(t<0 || t>hero.getRoom().getTalismans().size()){
-            hero.getTalisman().add(hero.getRoom().getTalismans().get(t));
-            hero.getRoom().getTalismans().remove(t);
+        if(t>=0 && t<hero.getRoom().getTalismans().size()){
+            hero.addTalisman((Talisman)hero.getRoom().getTalismans().get(t));
+            hero.getRoom().removeTalisman(t);
             return true;
         }else{
             return false;
@@ -546,7 +564,7 @@ public class Cave {
      * @return retourne si l'action a bien etait effectuer
      */
     public boolean putTalismans(int t){
-        if(t<0 || t>hero.getTalisman().size()){
+        if(t>=0 && t<hero.getTalisman().size()){
             hero.getRoom().getTalismans().add(hero.getTalisman().get(t));
             hero.getTalisman().remove(t);
             return true;
@@ -565,11 +583,11 @@ public class Cave {
             if(hero.getRoom().getTalismans().size()>0){
                 System.out.println("Prendre un talismant dans la salle (P)");
             }
-            if(hero.getTalisman()!=null){
+            if(hero.getTalisman()!=null && hero.getTalisman().size()>0){
                 System.out.println("Jeter un talismant dans la salle (J)");
             }
             System.out.println("Voir votre inventaire (V)");
-            if(hero.getRoom().getTalismansLock()!=null){
+            if(hero.getRoom().getTalismansLock()!=null && hero.getRoom().getTalismansLock().size()>0){
                 System.out.println("Utiliser un talismant sur un monstre (U)");
             }
             System.out.println("Deplacer votre hero dans une autre salle (D)");
@@ -601,7 +619,7 @@ public class Cave {
             int choise;
             do{
                 choise = sc.nextInt();
-            }while(takeTalismans(choise));
+            }while(!takeTalismans(choise));
         }
         if(c == 'J'){
             System.out.println("Quelle talisement jetez vous?");
@@ -609,7 +627,7 @@ public class Cave {
             int choise;
             do{
                 choise = sc.nextInt();
-            }while(putTalismans(choise));
+            }while(!putTalismans(choise));
         }
         if(c == 'V'){
             hero.inventaire();
