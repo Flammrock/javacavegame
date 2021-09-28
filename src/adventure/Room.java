@@ -88,6 +88,7 @@ public class Room extends Item {
         this.entrances = entrances;
     }
     
+    
     /**
      *
      * @return retourne la description de la salle avec son contenu
