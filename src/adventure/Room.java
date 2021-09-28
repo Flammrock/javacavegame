@@ -22,6 +22,8 @@ public class Room extends Item {
     
     public Room(int x, int y, String name, String entrances, boolean isStart) {
         super(name);
+        this.x = x;
+        this.y = y;
         this.entrances = entrances;
         this.talismans = new ArrayList<>();
         this.isStart = isStart;
