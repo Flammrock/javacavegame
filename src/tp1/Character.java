@@ -6,41 +6,33 @@
 package tp1;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
  *
  * @author User
  */
-public class Character {
+public class Character extends Item {
     
-    private String name;
-    private String originRoomName;
-    private ArrayList<Talisman> talisman;
+    private Room room;
+    private List<Talisman> talisman;
 
-    public Character(String originRoomName, String name, ArrayList<Talisman> talisman) {
-        this.originRoomName = originRoomName;
-        this.name = name;
+    public Character(String name, Room room, List<Talisman> talisman) {
+        super(name);
+        this.room = room;
         this.talisman = talisman;
     }
 
-    public String getOriginRoomName() {
-        return originRoomName;
+    public Room getRoom() {
+        return room;
     }
 
-    public void setOriginRoomName(String originRoomName) {
-        this.originRoomName = originRoomName;
+    public void setRoom(Room room) {
+        this.room = room;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public ArrayList<Talisman> getTalisman() {
+    
+    public List<Talisman> getTalisman() {
         return talisman;
     }
 
@@ -56,10 +48,10 @@ public class Character {
      * @param entrances
      * @return retourne la sortie choisie par l'utilisateur
      */
-    public char moveWhere(String entrances){
+    public char moveWhere(){
         Scanner sc = new Scanner(System.in);
         while(true){
-            System.out.println("Quel est votre prochaine destination? ("+entrances+")");
+            System.out.println("Quel est votre prochaine destination? ("+this.room.getEntrances()+")");
             String nextRoom = sc.next();
             nextRoom = nextRoom.toUpperCase();
             char nextPorte = nextRoom.charAt(0);

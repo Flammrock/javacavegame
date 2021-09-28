@@ -11,18 +11,17 @@ import java.util.ArrayList;
  *
  * @author User
  */
-public class Room {
+public class Room extends Item {
     
     private int x;
     private int y;
-    private String name;
     private String entrances;
     private ArrayList<Talisman> talismans;
     private ArrayList<Talisman> talismansLock;
     private boolean isStart;
     
     public Room(int x, int y, String name, String entrances, boolean isStart) {
-        this.name = name;
+        super(name);
         this.entrances = entrances;
         this.talismans = new ArrayList<>();
         this.isStart = isStart;
@@ -67,14 +66,6 @@ public class Room {
         this.y = y;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getEntrances() {
         return entrances;
     }
@@ -89,7 +80,7 @@ public class Room {
      */
     @Override
     public String toString(){
-        String phrasesDescriptif = "Vous entrez dans : " + name + "\n";
+        String phrasesDescriptif = "Vous entrez dans : " + this.getName() + "\n";
         if(talismans.size()==1){
             phrasesDescriptif += "il y a 1 talisman dans cette salle :\n";
         }else if(talismans.size()>0){
