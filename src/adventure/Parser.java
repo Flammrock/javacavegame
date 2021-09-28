@@ -31,12 +31,49 @@ public class Parser {
     protected char charSize      = '!';
     protected char charSeparator = ',';
     
+    protected boolean acceptEmptyToken = true;
 
     public Parser(Stream stream) {
         this.stream = stream;
         this.current = null;
         this.currentline = 0;
     }
+
+    public boolean isAcceptEmptyToken() {
+        return acceptEmptyToken;
+    }
+
+    public void setAcceptEmptyToken(boolean acceptEmptyToken) {
+        this.acceptEmptyToken = acceptEmptyToken;
+    }
+    
+    
+
+    public char getCharComment() {
+        return charComment;
+    }
+
+    public void setCharComment(char charComment) {
+        this.charComment = charComment;
+    }
+
+    public char getCharSize() {
+        return charSize;
+    }
+
+    public void setCharSize(char charSize) {
+        this.charSize = charSize;
+    }
+
+    public char getCharSeparator() {
+        return charSeparator;
+    }
+
+    public void setCharSeparator(char charSeparator) {
+        this.charSeparator = charSeparator;
+    }
+    
+    
     
     public boolean hasNextToken() {
         return this.stream.hasNext();
@@ -126,7 +163,13 @@ public class Parser {
         int line = this.currentline;
         while (line==this.currentline) {
             if (!this.hasNextToken()) return tokens;
-            tokens.add(this.getNextToken());
+            if (this.isAcceptEmptyToken()) {
+                tokens.add(this.getNextToken());
+            } else {
+                Token token = this.getNextToken();
+                String data = token.getData();
+                if (!data.isEmpty()) tokens.add(token);
+            }
         }
         return tokens;
     }

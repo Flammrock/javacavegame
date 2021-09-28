@@ -18,10 +18,10 @@ public class Character extends Item {
     private Room room;
     private List<Talisman> talisman;
 
-    public Character(String name, Room room, List<Talisman> talisman) {
+    public Character(String name, Room room, List<Talisman> talismans) {
         super(name);
         this.room = room;
-        this.talisman = talisman;
+        this.talisman = talismans==null?new ArrayList<>():talismans;
     }
 
     public Room getRoom() {
