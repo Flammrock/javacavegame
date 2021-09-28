@@ -6,7 +6,7 @@
 package adventure;
 
 /**
- *
+ * 
  * @author User
  */
 public class Token {

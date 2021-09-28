@@ -55,6 +55,21 @@ public class Cave {
                     .loadCharactersFromStream(new Stream(Cave.class.getResourceAsStream("Characters.dat")))
                     .build();
 
+            Player player = new Player("lol", null, null);
+            
+            while (true) {
+                String input = player.getInput();
+                if (input.equals("T")) {
+                    String data = player.getInput();
+                    System.out.println("Vous voulez prendre le talisman : "+data);
+                } else if (input.equals("M")) {
+                    String data = player.getInput();
+                    System.out.println("Vous voulez aller : "+data);
+                } else {
+                    player.abortInput();
+                }
+            }
+            
             
             /*Parser p = new Parser(new Stream(System.in));
             p.setCharSeparator(' ');
@@ -66,17 +81,25 @@ public class Cave {
             }*/
             
             // on créé le héro et on le met dans la 1ère salle de la liste
-            Character Hero = new Character("Hero",m.getRooms().get(0),null);
+            /*Player hero = new Player("Hero",m.getRooms().get(0),null);
 
             // on ajoute le héro dans la map
-            m.setHero(Hero);
+            m.setHero(hero);
 
             // on fait entrer le héro dans la salle
             m.enterNewRoom(m.getRooms().get(0));
             
             while (true) {
-                m.quefaire();
-            }
+                
+                // we get the input of the player
+                String input = hero.getInput();
+                
+                // process the input
+                m.processInput(input);
+                
+                //m.quefaire();
+                
+            }*/
             
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "an exception was thrown", e);
@@ -117,7 +140,7 @@ public class Cave {
         private List<List<Token>> unsolvedCharacters;
         
         // contains the hero
-        private Character hero;
+        private Player hero;
         
         // a callback for the method loadObjectFromStream (see below)
         private interface Callback {
@@ -389,7 +412,7 @@ public class Cave {
         }
     }
     
-    private Character hero;
+    private Player hero;
     private List<Room> rooms;
     private int width;
     private int height;
@@ -401,7 +424,7 @@ public class Cave {
         this.height = 0;
     }
 
-    private Cave(List<Room> rooms, Character hero, int width, int height) {
+    private Cave(List<Room> rooms, Player hero, int width, int height) {
         this.rooms = rooms;
         this.hero = hero;
         this.width = width;
@@ -416,11 +439,11 @@ public class Cave {
         this.rooms = rooms;
     }
 
-    public Character getHero() {
+    public Player getHero() {
         return hero;
     }
 
-    public void setHero(Character hero) {
+    public void setHero(Player hero) {
         this.hero = hero;
     }
 
@@ -439,6 +462,14 @@ public class Cave {
     public void setHeight(int height) {
         this.height = height;
     }
+    
+    
+    public boolean processInput(String input) {
+        return true;
+    }
+    
+    
+    
     
     /**
      *Cette fonction décrit les salles qui sont connecter a la salle entrer
