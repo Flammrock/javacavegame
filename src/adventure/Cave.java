@@ -451,30 +451,73 @@ public class Cave {
     
     public void processInput() {
         while (true) {
+            
+            this.displayInstructions(this.hero.getRoom());
+            
             String input = this.hero.getInput();
             
             // take a talisman
             if (input.equals("T")) {
                 
                 String data = this.hero.getInput();
-                System.out.println("Vous voulez prendre le talisman : " + data);
+                //System.out.println("Vous voulez prendre le talisman : " + data);
                 
                 // try to take the talisman
-                // this.taketalisman()
+                for(Talisman t : hero.getRoom().getTalismans()){
+                    if(data.equals(t.getName())){
+                        takeTalismans(t);
+                        System.out.println("Talismans pris");
+                        break;
+                    }
+                }
             
             // else go to another room
             } else if (input.equals("M")) {
                 
                 String data = this.hero.getInput();
-                System.out.println("Vous voulez aller : " + data);
+                //System.out.println("Vous voulez aller : " + data);
                 
-                // try to go to the direction {data}
-                // this.move(data)
+                //si la position NSEW est donné en entrer
+                if (data.length()==1) {
+                    this.enterNewRoom(this.moveCharacter(data.charAt(0)));
+                    continue;
+                    
+                //si le nom de la salle est donné en entrer
+                } else {
+                    Room room = findRoom(data);
+                    if (room!=null) {
+                        this.enterNewRoom(room);
+                        continue;
+                    }
+                }
             
-            // else the input is bad, reset the input of player
-            } else {
-                this.hero.abortInput();
+            // else throw a talisman
+            } else if (input.equals("P")) {
+            
+                String data = this.hero.getInput();
+                
+                for(Talisman t : hero.getRoom().getTalismans()){
+                    if(data.equals(t.getName())){
+                        putTalismans(t);
+                        System.out.println("Talismans depose");
+                    }
+                }
+                
+            // else see inventory
+            } else if (input.equals("I")) {
+                
+                hero.inventaire();
+            
+            // else see informations about the room
+            } else if (input.equals("D")) {
+                
+                descriptionAlentoure(hero.getRoom().getX(),hero.getRoom().getY());
+                System.out.println(hero.getRoom().getTalismansToString());
+                
             }
+            
+            // reset input
+            this.hero.abortInput();
         }
     }
     
@@ -626,7 +669,7 @@ public class Cave {
      * demande a l'utilisateur cfe qui veux faire en fonction de ses possibilites et l'oblige a donner un choix possible
      * @return choix de l'utilisateur pour la suite de ses actions
      */
-    private void displayChoiceTalisman(Room r){
+    private void displayInstructions(Room r){
         System.out.println("Vous pouvez:");
         if(r.getTalismans().size()>0){
             System.out.println("Prendre un talismant dans la salle (T)");
