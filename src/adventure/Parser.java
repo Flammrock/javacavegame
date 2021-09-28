@@ -167,6 +167,11 @@ public class Parser {
         
     }
     
+    /**
+     * @deprecated
+     * This method try to extract all the available tokens in the stream
+     * @return the list of tokens extracted
+     */
     public List<Token> getTokenList() {
         List<Token> tokens = new ArrayList<>();
         while (this.hasNextToken()) {
@@ -222,7 +227,7 @@ public class Parser {
      * @return true  => a line or lines are skip
      *         false => nothing is skip
      */
-    private boolean ignoreLinesStartWith(char a) {
+    protected boolean ignoreLinesStartWith(char a) {
         if (!this.hasNextToken()) return false;
         boolean b = false;
         while (true) {
