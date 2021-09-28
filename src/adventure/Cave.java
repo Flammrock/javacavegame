@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import java.util.logging.Handler;
 
 /**
  *
@@ -28,6 +29,9 @@ public class Cave {
     // configure the logger
     static {
         System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [%4$-7s] {%2$s} %5$s%6$s%n");
+        
+        LOGGER.setUseParentHandlers(false);
+        
         try {
             FileHandler fileHandler = new FileHandler("game.log");
             fileHandler.setFormatter(new SimpleFormatter());
