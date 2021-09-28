@@ -15,21 +15,23 @@ import java.util.List;
 public class Controller {
     
     private List<Token> tokens;
+    private Parser parser;
 
     public Controller() {
         this.tokens = new ArrayList<>();
+        this.parser = new Parser(new Stream(System.in));
+        this.parser.setCharSeparator(' ');
     }
     
     private void populate() {
         if (this.tokens.isEmpty()) {
-            Parser p = new Parser(new Stream(System.in));
-            p.setCharSeparator(' ');
-            this.tokens.addAll(p.getNextObject());
+            this.tokens.addAll(this.parser.getNextObject());
         }
     }
     
     public String getInput() {
         this.populate();
+        if (this.tokens.isEmpty()) return "";
         String input = this.tokens.remove(0).getData();
         return input;
     }

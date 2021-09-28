@@ -55,7 +55,6 @@ public class Cave {
                     .loadCharactersFromStream(new Stream(Cave.class.getResourceAsStream("Characters.dat")))
                     .build();
 
-            
             /*Parser p = new Parser(new Stream(System.in));
             p.setCharSeparator(' ');
             p.setAcceptEmptyToken(false);
