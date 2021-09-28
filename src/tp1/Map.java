@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  *
@@ -27,6 +32,20 @@ public class Map {
     }
     
     public static class Builder {
+        
+        // get the logger
+        private static final Logger LOGGER = Logger.getLogger(Builder.class.getPackage().getName());
+        
+        // configure the logger
+        static {
+            try {
+                FileHandler fileHandler = new FileHandler("game.log");
+                fileHandler.setFormatter(new SimpleFormatter());
+                LOGGER.addHandler(fileHandler);
+            } catch(Exception exception) {
+                LOGGER.log(Level.SEVERE, "Cannot read configuration file", exception);
+            }
+        }
         
         // contains all rooms added to this builder
         private List<Room> rooms;
@@ -76,6 +95,7 @@ public class Map {
         Builder setWidth(int width) throws Map.ParseException {
             if (this.isMapSizeValid()) throw new Map.ParseException("Map size already defined");
             this.width = width;
+            LOGGER.log(Level.INFO, "Width = {0}", width);
             return this;
         }
         Builder setHeight(int height) throws Map.ParseException {
@@ -86,6 +106,8 @@ public class Map {
         
         
         Builder loadRoomsFromStream(Stream stream) throws Map.ParseException {
+            
+            LOGGER.log(Level.INFO, "Load Room from a stream");
             
             int x = 0;
             int y = 0;
@@ -218,7 +240,6 @@ public class Map {
                 // if two items have same name, send a warning
                 if (hashmap.containsKey(key)) {
                     System.err.println("[Warning] Two items have the name ["+key+"]");
-                    
                 }
                 
                 // if no key, create the array first
